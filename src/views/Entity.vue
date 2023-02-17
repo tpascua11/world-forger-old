@@ -1,9 +1,13 @@
 <template>
+  <div>
   <div class="pure-g">
     <div class="pure-u-1-24" >
     </div>
 
-    <div class="pure-u-3-24" style="right: 10">
+    <!-- Entity List Selector -->
+    <div class="pure-u-3-24 dt-border-x2">
+      <div>
+      </div>
       <JustList
         v-model="selectedEntity"
         v-bind:map="thisMapList"
@@ -17,50 +21,182 @@
       />
     </div>
 
+
     <div class="pure-u-1-24" >
     </div>
 
+
+    <div class="pure-u-12-24 dt-border-x2">
+      <div v-if="!selectedEntity.empty">
+        <div class="row border-down-x3 margin1" style="min-height: 40px;">
+          <div class="d-font-x2-b">
+            <div class="pure-u-16-24">
+              {{title}}
+            </div>
+            <div class="pure-u-8-24 right">
+              <button class="pure-button b-yellow sm-button"
+                v-on:click="copyEntity();">
+                <div class="sm-text"> Copy </div>
+              </button>
+              -
+              <button class="pure-button b-red sm-button" v-on:click="test();">
+                <div class="sm-text"> X </div>
+              </button>
+            </div>
+          </div>
+          <div class="pure-u-24-24" style=" position:relative; top: 3px;">
+              <div class="" style="overflow: hidden; ">
+                <label>
+                  <input
+                    class="borderless-gray" placeholder="name..."
+                    v-model="selectedEntity.name"
+                    type="text" style="font-weight: 900; font-size: 25px; height: 25px; width: 100%;"
+                  />
+                </label>
+              </div>
+          </div>
+        </div>
+        <div class="dt-border-x2 margin1">
+            <div class="pure-u-24-24" style="font-weight: 900;">
+              <span>
+                <button class="pure-button sm-button" v-on:click="selectAttribute"
+                        v-bind:style="[showOption == 'ATTRIBUTE' ? targeted : {}]"
+                >
+                  <div class="sm-text">
+                    Attributes
+                  </div>
+                </button>
+                -
+                <button class="pure-button sm-button" v-on:click="selectCondition"
+                        v-bind:style="[showOption == 'CONDITION' ? targeted : {}]"
+                >
+                  <div class="sm-text">
+                    Conditions
+                  </div>
+                </button>
+              </span>
+              <span v-for="(row,index) in templateInfo" :key="index">
+                <span v-if="row.type == 'script_list' "> - </span>
+                <button v-if="row.type == 'script_list'" class="pure-button sm-button"
+                  v-bind:style="[(showOption == 'SCRIPT_LIST') && (listName == index) ? targeted : {} ]"
+                  v-on:click="selectScriptListName(index)"
+                >
+                  <div class="sm-text"> {{index}} Event </div>
+                </button>
+              </span>
+            </div>
+        </div>
+        <section class="cool-scroll" style="height: 80vh;">
+        <div class="" v-if="showOption == 'ATTRIBUTE'">
+          <div v-for="(row , index) in selectedEntity" :key="index">
+            <div v-if="templateInfo[index]">
+              <div v-if="templateInfo[index].type == 'list_current_and_max'">
+                <div v-if="false">
+                  <StatList v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'stat'"/>
+                </div>
+                <hr>
+              </div>
+              <div v-else-if="templateInfo[index].type == 'list_custom'">
+                <ListCustom
+                  v-bind:title="index"
+                  v-model="selectedEntity[index]"
+                  v-bind:reference="templateInfo[index]"/>
+                <hr>
+              </div>
+              <!--
+              <div v-else-if="templateInfo[index].type == 'list_multi_select'">
+                <ListMultiSelect v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'item'"/>
+                <hr>
+              </div>
+              <div v-else-if="templateInfo[index].type == 'list_with_amount'">
+                <ListAmount v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'item'"/>
+                <hr>
+              </div>
+              -->
+              <div v-else-if="(templateInfo[index].type == 'script_list') || (templateInfo[index].type == 'condition_list') || index == 'name'"> </div>
+              <div v-else>
+                <label>
+                  {{index}} <input class="borderless-gray" placeholder="name..."
+                    v-model="selectedEntity[index]" type="text" style=" height: 25px; width: 50%;" />
+                </label>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else-if="showOption == 'CONDITION'" class="">
+        </div>
+        <div v-else-if="showOption == 'SCRIPT_LIST'" class="">
+          <ScriptList
+            v-bind:scriptList="selectedEntity[listName]"
+            v-bind:entity="selectedEntity"
+            v-bind:listName="listName"
+            v-bind:show="showOption"
+            @selectAction="selectAction"
+            :value="selectedAction"
+          />
+        </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="pure-u-5-24 margin2">
+      <section class="">
+        <div class="" v-if="showOption == 'SCRIPT_LIST'">
+          <!-- TEST {{listName}} {{selectedAction}} -->
+          <ScriptAction
+              :value="selectedAction"
+            v-bind:selectedAction="selectedAction"
+            v-bind:scriptList="selectedEntity[listName]"
+            v-bind:entity="selectedAction"
+            @deselectAction="deselectAction"
+          />
+        </div>
+      </section>
+    </div>
+
+  </div>
   </div>
 </template>
 
 <script>
 
-/*
 import ScriptList from '@/components/ScriptList.vue'
 import ScriptAction from '@/components/ScriptAction.vue'
 import Condition from '@/components/Condition.vue'
+
 import StatList from '@/components/attribute/ListCurrentAndMax.vue'
 
-*/
 
-//import ListMultiSelect from '@/components/attribute/ListMultiSelect.vue'
+import ListMultiSelect from '@/components/attribute/ListMultiSelect.vue'
 
-//import ListAmount from '@/components/attribute/ListWithAmount.vue'
-//import ListCustom from '@/components/attribute/ListCustom.vue'
+import ListAmount from '@/components/attribute/ListWithAmount.vue'
+import ListCustom from '@/components/attribute/ListCustom.vue'
 import JustList from '@/components/JustList.vue'
 
 
 export default {
   name: 'Character',
   components: {
-    //ScriptList,
-    //ScriptAction,
-    //StatList,
-    //ListMultiSelect,
-    //ListAmount,
-    //ListCustom,
+    ScriptList,
+    ScriptAction,
+    StatList,
+    ListMultiSelect,
+    ListAmount,
+    ListCustom,
     JustList,
-    //Condition,
+    Condition,
   },
   data: function() {
     return {
       //groupEntity: 'character',
       name: "Character",
       groupEntity: "item",
+      title: "Item",
 
       selectedAction: {empty: true},
       selectedInteraction: {},
-      selectedEntity: {empty: true},
+      selectedEntity: {empty: false},
 
       selectedScriptList: [],
       listName: "",
@@ -72,7 +208,7 @@ export default {
   },
   props: {
     //groupEntity: String,
-    title: String
+    //title: String
   },
   computed: {
     thisMap: function(){
@@ -101,7 +237,12 @@ export default {
     selectCondition: function(){
       this.showOption = 'CONDITION';
     },
+    selectAction(data){
+      console.log("Select Action", data);
+      this.selectedAction = data;
+    },
     deselectAction(){
+      console.log("TRUE DESELECT");
       this.selectedAction = {empty:true};
     },
     copyEntity(){
@@ -116,7 +257,10 @@ export default {
     },
     removeEntity(){
     },
-    refreshArea(){
+    refreshArea(test){
+      console.log("CLICK EVENT!", test);
+      if(test) this.selectedEntity = test;
+
       this.showOption = 'ATTRIBUTE';
     },
     refreshInteractionList(){
@@ -223,5 +367,20 @@ input:focus {
 .b-red{
   background-color: #FF7F7F;
 }
+
+.true-font{
+	font-family: Neucha;
+}
+
+#app {
+  font-family: "Neucha", Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+	color: #2c3e50;
+
+	/* text-align: center; */
+}
+
+
 
 </style>

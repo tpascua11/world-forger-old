@@ -136,7 +136,8 @@ export class World {
           description    : {type: 'string'},
           on_use         : {type: 'script_list'},
         },
-        list: {},
+        list: {
+        },
       },
       item2: {
         template: {name: '', amount: 0, amount_max: 10000, script_list: []},

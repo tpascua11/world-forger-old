@@ -26,21 +26,8 @@
 							<button class="pure-button action-button" v-on:click="toggleScriptFlag()"     >  <h4> Script Flag    </h4> </button>
 							<button class="pure-button action-button" v-on:click="newMoveIndex()"         >  <h4> Set Index At   </h4> </button>
 							<button class="pure-button action-button" v-on:click="newChoiceList()"        >  <h4> Choice List    </h4> </button>
-							<!-- TODO: Fix Area First
-							<button class="action-button" v-on:click="toggleAreaFlag()"       >  Area Flag </button>
-							-->
 						</div>
 						<div class="pure-u-1-2">
-							<!--
-							<button v-on:click="test()" class="btn-danger-outline btn-small btn-block smallfit">  If Condition</button>
-							<button v-on:click="simpleScriptFlag()" class="btn-danger-outline btn-small btn-block smallfit">  If Script Flag </button>
-							<button v-on:click="simpleAreaFlag()" class="btn-danger-outline btn-small btn-block smallfit">  If Area Flag</button>
-							<button v-on:click="simpleFlag()" class="btn-danger-outline btn-small btn-block smallfit">  If World Flag</button>
-							<button v-on:click="showModal('flagStat')" class="btn-danger-outline btn-small btn-block smallfit">  If Stat </button>
-							<button v-on:click="test()" class="btn-danger-outline btn-small btn-block smallfit">  If Item </button>
-							<button v-on:click="test()" class="btn-danger-outline btn-small btn-block smallfit">  If Time </button>
-							<section class="default-title-sm2"> Tools </section>
-							-->
 							<button class="pure-button action-button-p" v-on:click="addIf()"      >  <h4> IF      </h4> </button>
 							<button class="pure-button action-button-p" v-on:click="addElse()"    >  <h4> ELSE    </h4> </button>
           <button class="pure-button action-button-p" v-on:click="addElseIf()"  >  <h4> ELSE IF </h4> </button>
@@ -49,6 +36,7 @@
       </div>
     </div>
     <!-- Script: If Condition -->
+    <!--
 		<div v-if="value.ifCondition || value.elseIfCondition">
 			<div class="pure-u-1-1 " style="height: 22px;">
 				<div class="action-title margin2">
@@ -77,31 +65,40 @@
 				<br>
 				<br>
        </div>
-    </div>
+     </div>
+     -->
     </section>
     <!-- Back -->
     <!-- Script Imports Additions -->
     <section class="margin2">
-      <Description v-model="value"/>
-      <ToggleWorldFlag v-model="value"/>
-      <ToggleScriptFlag v-model="value"/>
-      <ToggleAreaFlag v-model="value"/>
-      <MoveIndex v-model="value"/>
+      <Description      :value="value"/>
+      <ToggleWorldFlag  :value="value"/>
+      <ToggleScriptFlag :value="value"/>
 
-      <ModifierItem v-model="value"/>
-      <ModifierStat v-model="value"/>
-      <ModifierStatWithInfluence v-model="value"/>
-      <Time v-model="value"/>
-      <MoveToArea v-model="value"/>
-      <ChoiceList v-model="value"/>
 
-      <WorldFlag v-model="value"/>
-      <AreaFlag v-model="value"/>
-      <ScriptFlag v-model="value"/>
-      <FlagStat v-model="value"/>
-      <FlagChanceOnStat v-model="value"/>
-      <ItemFlag v-model="value"/>
-      <TimeFlag v-model="value"/>
+      <MoveIndex        :value="value"/>
+      <!--
+      <ToggleAreaFlag   :value="value"/>
+      <ModifierItem     :value="value"/>
+      -->
+
+
+      <!--
+      <ModifierStat     :value="value"/>
+      <ModifierStatWithInfluence :value="value"/>
+
+      <Time :value="value"/>
+      <MoveToArea :value="value"/>
+      <ChoiceList :value="value"/>
+
+      <WorldFlag  :value="value"/>
+      <AreaFlag   :value="value"/>
+      <ScriptFlag :value="value"/>
+      <FlagStat   :value="value"/>
+      <FlagChanceOnStat :value="value"/>
+      <ItemFlag :value="value"/>
+      <TimeFlag :value="value"/>
+      -->
 		</section>
 
 		<div class="margin2" v-if="!value.empty">
@@ -184,8 +181,9 @@ export default {
   methods:{
     test(){ console.log("------");},
     newAction(){},
-		deselect(){
-      this.$emit('input', {empty: true});
+    deselect(){
+      console.log("DESELECT!");
+      this.$emit('deselectAction', {empty: true});
 		},
 		remove(){
 			console.log("remove");
@@ -207,6 +205,7 @@ export default {
 			this.refScriptList.push(template);
     },
     toggleScriptFlag(){
+      console.log("THIS THIS APP!")
 			let template = {eventName: "toggle_script_flag", flag: true, name: ''};
 			this.refScriptList.push(template);
     },

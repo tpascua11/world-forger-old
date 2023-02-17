@@ -13,9 +13,9 @@
       </div>
 
       <div id="the-list" class="cool-scroll" v-bind:style="{height: box_height}">
-        <div v-for="(row, index) in map" :key="index"
+				<div v-for="(row, index) in map" :key="index"
+          v-bind:style="[ row == selected ? styleObject : {}]"
           class="border-down row clickable"
-          v-bind:style="[ row == value ? styleObject : {}]"
           v-on:click="selectRow(row)"
         >
           <div class="pure-u-3-24 index-position left"> {{index}}.  </div>
@@ -68,16 +68,16 @@ export default {
       let nameX = newStr.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
       return nameX;
     },
-    selectRow: function(row){
+		selectRow: function(row){
       this.selected = row;
-      this.$emit('input', row);
-      this.$emit("selected");
+			//this.$emit('input', row);
+			this.$emit("selected", row);
     },
     addNewRow: function(){
       console.log("TEST REF MAP", this.refMap);
       let index = Object.keys(this.refMap).length + 1;
       index;
-      let newEntity
+      let newEntity;
 
       console.log("template", this.template);
       if(this.templateInfo) newEntity = this.copyFromTemplateInfo();
@@ -88,9 +88,11 @@ export default {
       this.refMap[index] = newEntity;
 
       this.selected = newEntity;
-      this.$emit('input', newEntity);
-      this.$emit("selected");
-      this.$emit('created');
+			//this.$emit('input', newEntity);
+			//this.$emit("selected");
+			//this.$emit('created');
+
+			this.$emit("selected", this.selected);
 
       this.$forceUpdate();
     },

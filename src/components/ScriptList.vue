@@ -1,13 +1,37 @@
 <template>
   <div>
     <div v-if="entity[listName]" class="">
-			<div>
-				<div class="script-row" v-if="error" style="font-size: 20px; background-color: pink;">
-					{{error}}
-				</div>
+      <div>
 
-				<div style="height: 75vh; overflow:auto;">
-					<draggable v-model="refScript[listName]" tag="div" @update="dragUpdate">
+        <div style="height: 75vh; overflow:auto;">
+          {{value}}
+
+          <draggable
+            v-model="refScript[listName]"
+            @start="drag=true"
+            @end="drag=false"
+					  @update="dragUpdate"
+            tag="div"
+            item-key="index">
+            <template #item="{element, index}">
+              <div class="script-row" v-bind:style="[value == element ?
+                selected: {}]">
+                <div class="pure-u-1-24 script-row-index center"> {{index}}: </div>
+                <div class="pure-u-20-24" v-bind:style=[indexPush(index)]>
+                  <div class="script-row-text" v-on:click="selectAction(element, index)"
+                    v-bind:style="[ value == element ? selected:
+                    {}]">
+                    {{element}}
+                  </div>
+                </div>
+                <div class="pure-u-3-24" v-if="value == element">
+                  ?????
+                </div>
+              </div>
+            </template>
+          </draggable>
+          <!--
+					<draggable item-key="index" v-model="refScript[listName]" tag="div" @update="dragUpdate">
 						<div class="script-row" v-for="(item, index) in refScript[listName]" :key="index" v-bind:style="[ item.isMoved ? moved : {}]">
 							<div class="pure-u-1-24 script-row-index center"> {{index}}: </div>
 							<div class="pure-u-23-24" v-bind:style=[indexPush(index)]>
@@ -17,8 +41,9 @@
 								</div>
 							</div>
 						</div>
-					</draggable>
-				</div>
+          </draggable>
+          -->
+        </div>
 			</div>
 
 		</div>
@@ -39,7 +64,7 @@ export default {
         fontSize: '13px'
       },
       moved:    { 'background-color': '#FFFFE0'   },
-      selected: { 'background-color': 'peachpuff' },
+      selected: { 'background-color': 'pink' },
       targeted: { 'background-color': 'lightblue' },
       action: {},
       selectedActionName: '',
@@ -87,7 +112,7 @@ export default {
 			console.log("CHECK", index);
 			console.log("SELECTING ACTION", row);
       this.validScriptList();
-			this.$emit('input', row);
+      this.$emit('selectAction', row);
     },
     deselectAction(){
 			this.value = {empty: true};

@@ -1,32 +1,18 @@
 <template>
   <div class="Test">
-    <p>Super Test!</p>
-    <div class="pure-g">
-      <!--
-      <div class="pure-u-1-3">
-        <JustList
-          v-model="selectedEntity"
-          v-bind:map="thisMapList"
-          v-bind:title="title"
-          v-bind:set_height="'450px'"
-          v-bind:template="thisMap.template"
-          v-bind:templateInfo="thisMap.templateInfo"
-          @selected="refreshArea"
-          @created="refreshInteractionList"
-          v-bind:refresh="refresh"
-        />
-      </div>
-      -->
-      <div class="pure-u-1-3">
-        <Select
-          :options="list"
-          :default="'go'"
-          class="select"
-          @input="test()"
-        />
-      </div>
-      <div class="pure-u-1-3"></div>
-    </div>
+		<p>Super Test!</p>
+		<div class="pure-g">
+			<div class="pure-u-1-3">
+				Test
+			</div>
+			<div class="pure-u-1-3">
+				Test
+				<VueMultiselect
+					v-model="selected"
+					:options="list"
+				/>
+			</div>
+		</div>
   </div>
 </template>
 
@@ -44,7 +30,8 @@ import {World} from '@/data/world.js';
 export default {
   name: "TestView",
   data() {
-    return {
+		return {
+			selected: null,
       list: ["a", "b"],
       listb: [
         { a: 1, b: 2 },
@@ -53,7 +40,7 @@ export default {
     };
   },
   components: {
-    Select,
+		Select,
   },
   methods: {
     test() {
@@ -74,3 +61,4 @@ export default {
   border: 1px solid black;
 }
 </style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
