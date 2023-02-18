@@ -10,17 +10,7 @@
     <br>
     <div class="row">
       <SelectNameAndID :value="value" :list="flagKey"/>
-      <!--
-      <v-select v-model="value.id" :options="flagList" label="id" @input="setName">
-        <template #selected-option="{}">
-          {{flagKey[value.id].name}}
-        </template>
-        <template #option="{id}">
-          {{flagKey[id].name}}
-        </template>
-      </v-select>
-      -->
-    </div>
+     </div>
     <br>
     <div class="">
       <div class="col col-12">
@@ -40,6 +30,7 @@
       </div>
     </div>
     <p>
+      {{flagKey}}
       A world flag is a global flag. This flag is used from anywhere.
     </p>
   </section>

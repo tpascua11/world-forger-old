@@ -44,7 +44,7 @@
 									</button>
 								</div>
 								<div class="pure-u-9-24">
-									<SelectNameAndID v-model="value.condition_list[index].hasStat[index2]" :list="list"/>
+									<SelectNameAndID :value="value.condition_list[index].hasStat[index2]" :list="list"/>
 										<!--
 									<v-select v-model="item2.name" :options="flagList" label="id" @input="updateNow" :clearable="false">
 										<template #selected-option="{}">
@@ -61,7 +61,8 @@
 										-->
 								</div>
 
-								<div class="pure-u-3-24">
+                <div class="pure-u-3-24">
+                  <!--
 									<v-select v-model="item2.operator" :options="operatorList" @input="updateNow" :clearable="false">
 										<template #selected-option="{}">
 											<div class="v-font">
@@ -76,7 +77,8 @@
 										<template #open-indicator="{ attributes }">
 											<span v-bind="attributes"></span>
 										</template>
-									</v-select>
+                  </v-select>
+                  -->
 								</div>
 
 								<div class="pure-u-4-24">

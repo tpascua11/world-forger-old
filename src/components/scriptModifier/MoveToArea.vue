@@ -6,7 +6,7 @@
     <br>
     <div>
       Area List
-      <SelectNameAndID v-model="value" v-bind:list="flagKey"/>
+      <SelectNameAndID :value="value" v-bind:list="flagKey"/>
 
     </div>
     <br>

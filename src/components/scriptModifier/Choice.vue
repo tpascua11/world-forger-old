@@ -5,13 +5,16 @@
     </div>
     <div>
       <br>
-        <v-select v-model="value.choiceList"
-          label="id"
-          :taggable="true"
-          :multiple="true"
-        >
-        </v-select>
 
+    <VueMultiselect
+      v-model="value.choiceList" tag-placeholder="Add this as new tag"
+      :options="list"
+      placeholder="Search or add a tag"
+      :multiple="true"
+      :taggable="true"
+      @tag="addTag"
+    >
+    </VueMultiselect>
 
     </div>
     <div class="row">
@@ -29,12 +32,17 @@ export default {
   name: 'Basic',
   data: function(){
     return {
+      list: [],
     }
   },
   props: ['value'],
   mounted(){},
   methods:{
     test(){console.log("new option")},
+    addTag(test){
+      console.log("what is test", test);
+      this.value.choiceList.push(test);
+    },
     createChoice({value}){
       console.log("CHECK");
       this.value.choiceList.push(value);

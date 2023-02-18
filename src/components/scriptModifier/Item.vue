@@ -8,20 +8,7 @@
     <div>
       <div class="pure-u-3-3">
         Item List
-        <VueMultiselect
-          v-model="value.id"
-          :options="flagList"
-        />
-        <!--
-        <v-select v-model="value.id" :options="flagList" label="id" @input="setName">
-          <template #selected-option="{}">
-            {{flagKey[value.id].name}}
-          </template>
-          <template #option="{id}">
-            {{flagKey[id].name}}
-          </template>
-        </v-select>
-        -->
+        <SelectNameAndID :value="value" :list="flagKey"/>
       </div>
       <br>
       <div class="pure-u-3-3">
@@ -45,19 +32,28 @@ export default {
   name: 'Basic',
   data: function(){
     return {
+      selected: null,
       flagList: Object.keys(this.$root.world.group.item.list),
       flagKey : this.$root.world.group.item.list,
+      listWithKeys: this.objectListToList(this.flagKey),
     }
   },
   props: ['value'],
-  mounted(){},
+  mounted(){
+    if(this.value && this.value.id){
+      this.selected = this.value.id;
+    }
+  },
   methods:{
     test(){},
     toggleFlag(){
       this.value.flag = !this.value.flag;
     },
 		setName(){
-			this.value.name = this.flagKey[this.value.id].name;
+      //this.value.name = this.flagKey[this.value.id].name;
+      //this.value.name = this.selected.name;
+      this.value.id = this.selected;
+      this.value.name = this.flagKey[this.value.id].name;
 		},
     createFlag({value}){
       console.log("test", this.$root.world.itemMap);

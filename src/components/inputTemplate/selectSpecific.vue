@@ -1,17 +1,14 @@
 <template>
   <div>
-    <v-select v-model="value.refresh" :options="listWithKeys" label="name"
-      :reduce="stat => (stat.id)" @input="setName($event);"
+    <VueMultiselect
+      v-model="selected"
+      :options="listWithKeys"
+      @select="setName()"
+      track-by="name"
+      label="name"
+      :show-labels="false"
     >
-      <template #selected-option="{}">
-        {{list[indexer].name}}
-      </template>
-      <!--
-      <template #option="{id}">
-        {{list[id].name}}
-      </template>
-      -->
-    </v-select>
+    </VueMultiselect>
   </div>
 </template>
 
@@ -23,29 +20,29 @@ export default {
       template: {name: '', flag: true},
       listWithKeys: this.objectListToList(this.list),
       indexer: 0,
+      selected: null,
     }
   },
   props: ['value', 'list', 'option_to_value', 'name_set'],
   mounted(){
+    if(this.option_to_value){
+      this.selected = {};
+      this.option_to_value.forEach(row =>{
+        this.selected[row[0]] = this.value[row[1]];
+      }, this);
+      }
   },
   methods:{
     test(){},
     toggleFlag(){
       this.value.flag = !this.value.flag;
     },
-    setName(newID){
-
-      //let newID = this.value.id;
-      //this.value.id = newID;
-      console.log("what is", this.option_to_value);
+    setName(){
       if(this.option_to_value){
         this.option_to_value.forEach(row =>{
-          if(row[0] == 'id') this.value.[row[1]] = newID;
-          else this.value.[row[1]] = this.list[newID].[row[0]];
+          this.value[row[1]] = this.selected[row[0]];
         }, this);
       }
-      this.indexer = newID;
-      delete this.value.refresh;
     },
     createFlag(){
     }

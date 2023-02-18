@@ -8,6 +8,7 @@ import "../src/assets/css/styles.scss";
 import VueSingleSelect from "vue-single-select";
 
 import SelectNameAndID from '@/components/inputTemplate/selectNameAndID.vue'
+import SelectSpecific  from '@/components/inputTemplate/selectSpecific.vue'
 //import Multiselect from 'vue-multiselect'
 import VueMultiselect from 'vue-multiselect'
 
@@ -20,6 +21,7 @@ app.use(pinia);
 app.mount("#app");
 app.component("vue-single-select", VueSingleSelect);
 app.component("SelectNameAndID", SelectNameAndID);
+app.component("SelectSpecific", SelectSpecific);
 app.component('VueMultiselect', VueMultiselect);
 
 app.mixin({

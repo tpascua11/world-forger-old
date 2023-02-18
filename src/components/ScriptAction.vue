@@ -36,7 +36,6 @@
       </div>
     </div>
     <!-- Script: If Condition -->
-    <!--
 		<div v-if="value.ifCondition || value.elseIfCondition">
 			<div class="pure-u-1-1 " style="height: 22px;">
 				<div class="action-title margin2">
@@ -66,7 +65,6 @@
 				<br>
        </div>
      </div>
-     -->
     </section>
     <!-- Back -->
     <!-- Script Imports Additions -->
@@ -74,27 +72,24 @@
       <Description      :value="value"/>
       <ToggleWorldFlag  :value="value"/>
       <ToggleScriptFlag :value="value"/>
-
-
       <MoveIndex        :value="value"/>
-      <!--
-      <ToggleAreaFlag   :value="value"/>
       <ModifierItem     :value="value"/>
-      -->
-
-
-      <!--
       <ModifierStat     :value="value"/>
       <ModifierStatWithInfluence :value="value"/>
-
       <Time :value="value"/>
       <MoveToArea :value="value"/>
       <ChoiceList :value="value"/>
 
+
+      <!--
+      <FlagStat   :value="value"/>
+      TODO: Complete Remove, inefficient design
+      <ToggleAreaFlag   :value="value"/>
       <WorldFlag  :value="value"/>
       <AreaFlag   :value="value"/>
       <ScriptFlag :value="value"/>
-      <FlagStat   :value="value"/>
+      -->
+      <!--
       <FlagChanceOnStat :value="value"/>
       <ItemFlag :value="value"/>
       <TimeFlag :value="value"/>

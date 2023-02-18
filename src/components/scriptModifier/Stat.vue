@@ -8,7 +8,7 @@
 		<br>
 		<div class="pure-u-3-3" style="font-size: 20px;">
 			Stat List
-      <SelectNameAndID v-model="value" :list="flagKey"/>
+      <SelectNameAndID :value="value" :list="flagKey"/>
 		</div>
     <br>
     <div class="pure-u-3-3">
