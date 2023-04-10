@@ -1,12 +1,5 @@
 <template>
-  <section class="">
-   <modal name="FlagChanceOnStat"
-      :width="650"
-      :height="'auto'"
-      :shiftY="0.1"
-      :styles="'border: 2px solid black'"
-      :scrollable="true"
-    >
+  <section>
 			<section class="modal-total-height margin3">
 
 				<div class="pure-u-24-24 list-title">
@@ -35,21 +28,10 @@
 						</div>
 						<section class="" v-for="(item2, index2) in item1.hasChanceStat" :key="index2">
 							<div class="pure-u-7-24">
-								Stat
-									<v-select v-model="item2.id" :options="flagList" label="id" @input="updateNow" :clearable="false">
-										<template #selected-option="{}">
-											<div class="v-font">
-												{{list[item2.id].name}}
-											</div>
-										</template>
-										<template #option="{id}">
-											<div class="v-font">
-												{{list[id].name}}
-											</div>
-										</template>
-									</v-select>
-
-
+                Stat
+									<SelectNameAndID
+                    :value="item2"
+                    :list="list"/>
 							</div>
 							<div class="pure-u-1-24"></div>
 							<div class="pure-u-9-24">
@@ -144,7 +126,8 @@
             <div class="closer row">
               <div class="col-1"> </div>
               <div class="col-3">
-								Stat
+                Stat
+                <!--
 									<v-select v-model="item2.id" :options="flagList" label="id" @input="updateNow" :clearable="false">
 										<template #selected-option="{}">
 											<div class="v-font">
@@ -156,7 +139,8 @@
 												{{list[id].name}}
 											</div>
 										</template>
-									</v-select>
+                  </v-select>
+                  -->
               </div>
               <div class="col-1"> </div>
               <div class="col-2"> Start Stat    <input class="shorten-input" type="number" v-model="item2.stat_base" 			 		placeholder="default value..."> </div>
@@ -203,7 +187,6 @@
       </div>
 		</section>
     </section>
-  </modal>
   </section>
 </template>
 
@@ -235,14 +218,15 @@ export default {
       keyList : Object.keys(this.$root.world.group.stat.list),
     }
   },
-  props: ['value'],
+  props: ['value', 'modalName'],
   watch: {},
   mounted(){},
   methods:{
 		additionalAnd(index){
 			console.log("CHECK!");
 			if(!this.value.condition_list[index].hasChanceStat){
-				this.$set(this.value.condition_list[index], 'hasChanceStat', []);
+        //this.$set(this.value.condition_list[index], 'hasChanceStat', []);
+        this.value.condition_list[index].hasChanceStat = [];
 			}
       this.value.condition_list[index].hasChanceStat.push(
         {

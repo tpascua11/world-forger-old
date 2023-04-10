@@ -7,7 +7,7 @@
             style="position: relative; top: 5px; left: 2px;
                    font-size: 24px;"></i>
           </div>
-          <div class="pure-u-16-24 this-title left">
+          <div class="pure-u-16-24 this-title left" @click="titleClick">
             {{title}}
         </div>
       </div>
@@ -118,7 +118,10 @@ export default {
     scrollToEnd: function() {
       var container = this.$el.querySelector("#item-list");
       container.scrollTop = container.scrollHeight;
-    },
+		},
+		titleClick:function(){
+			this.$emit('titleClick');
+		},
   },
   computed: {
     refMap: function(){

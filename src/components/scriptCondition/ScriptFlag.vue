@@ -1,12 +1,5 @@
 <template>
   <section class="">
-    <modal name="ScriptFlag"
-      :width="675"
-      :height="'auto'"
-      :shiftY="0.2"
-      :styles="'border: 2px solid black'"
-      :scrollable="true"
-    >
       <section class="modal-total-height">
         <div class="row modal-body-height">
           <section style="height: 100px; default-title-sm2">
@@ -31,17 +24,43 @@
 
                       <td class="if-color"  width="5%">  IS </td>
                       <td class="if-color"  width="37%">
+                        <!--
                         <v-select v-model="item.isScriptList"
                           :from="trueList(item)" class=" " placeholder="Add Flag"
                           @create="createIsScriptFlag($event, item)">
                         </v-select>
+                        -->
+
+                        <VueMultiselect
+                          v-model="item.isScriptList"
+                          :options="trueList(item)"
+                          :multiple="true"
+                          :show-labels="false"
+                          :taggable="true"
+                          @tag="addTag($event, item.isScriptList)"
+                        >
+                        </VueMultiselect>
+
                       </td>
 
                       <td class="not-color" width="8%">  NOT </td>
                       <td class="not-color" width="37%">
+                        <!--
                         <v-select v-model="item.notScriptList" :from="trueList(item)" class=" " placeholder="Add Flag"
                           @create="createNotScriptFlag($event, item)">
                         </v-select>
+                        -->
+
+                        <VueMultiselect
+                          v-model="item.notScriptList"
+                          :options="trueList(item)"
+                          :multiple="true"
+                          :show-labels="false"
+                          :taggable="true"
+                          @tag="addTag($event, item.notScriptList)"
+                        >
+                        </VueMultiselect>
+
                       </td>
 
                       <td width="7%">
@@ -63,7 +82,6 @@
           </button>
         </div>
       </section>
-    </modal>
   </section>
 </template>
 
@@ -86,6 +104,9 @@ export default {
  },
   methods:{
     test(){},
+    addTag(item, list){
+      list.push(item);
+    },
     createWorldFlag({value}){
       console.log("CREATE NEW AREA FLAG", value.name);
       this.$root.world.flagMap[value.name] = false;
@@ -109,8 +130,10 @@ export default {
       this.value.condition_list.push({isScriptList: [], notScriptList: []});
     },
     addThisSet(index){
-      this.$set(this.value.condition_list[index], 'isScriptList', []);
-      this.$set(this.value.condition_list[index], 'notScriptList', []);
+      //this.$set(this.value.condition_list[index], 'isScriptList', []);
+      //this.$set(this.value.condition_list[index], 'notScriptList', []);
+      this.value.condition_list[index].isScriptList = [];
+      this.value.condition_list[index].notScriptList = [];
     },
     removeAtIndex(index){
       this.value.condition_list.splice(index, 1);
@@ -225,6 +248,7 @@ table, th, td {
 .thin{
   position:relative;
   top: -40px;
+  height: 100px;
 }
 
 .modal-total-height{

@@ -17,19 +17,25 @@
         v-bind:templateInfo="thisMap.templateInfo"
         @selected="refreshArea"
         @created="refreshInteractionList"
+        @titleClick="showEntityTemplate"
         v-bind:refresh="refresh"
       />
     </div>
 
-
     <div class="pure-u-1-24" >
     </div>
 
+    <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-17-24">
+      <Attribute
+        v-bind:entity_name="'item'"
+      />
+    </div>
 
-    <div class="pure-u-12-24 dt-border-x2">
+    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-12-24 dt-border-x2">
       <div v-if="!selectedEntity.empty">
         <div class="row border-down-x3 margin1" style="min-height: 40px;">
           <div class="d-font-x2-b">
+            <!--
             <div class="pure-u-16-24">
               {{title}}
             </div>
@@ -43,6 +49,7 @@
                 <div class="sm-text"> X </div>
               </button>
             </div>
+              -->
           </div>
           <div class="pure-u-24-24" style=" position:relative; top: 3px;">
               <div class="" style="overflow: hidden; ">
@@ -140,20 +147,23 @@
       </div>
     </div>
 
-    <div class="pure-u-5-24 margin2">
+
+    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-5-24 margin2">
       <section class="">
         <div class="" v-if="showOption == 'SCRIPT_LIST'">
           <!-- TEST {{listName}} {{selectedAction}} -->
           <ScriptAction
-              :value="selectedAction"
+            :value="selectedAction"
             v-bind:selectedAction="selectedAction"
             v-bind:scriptList="selectedEntity[listName]"
             v-bind:entity="selectedAction"
             @deselectAction="deselectAction"
+            @removeEntity="removeEntity"
           />
         </div>
       </section>
     </div>
+
 
   </div>
   </div>
@@ -162,6 +172,8 @@
 <script>
 
 import ScriptList from '@/components/ScriptList.vue'
+import Attribute from '@/components/Attribute.vue'
+
 import ScriptAction from '@/components/ScriptAction.vue'
 import Condition from '@/components/Condition.vue'
 
@@ -178,6 +190,7 @@ import JustList from '@/components/JustList.vue'
 export default {
   name: 'Character',
   components: {
+    Attribute,
     ScriptList,
     ScriptAction,
     StatList,
@@ -204,6 +217,8 @@ export default {
       targeted: { 'background-color': 'lightblue' },
       showOption: 'ATTRIBUTE',
       refresh: 0,
+      showView: 'entityEdit',
+      entityName: 'item',
     };
   },
   props: {
@@ -223,8 +238,12 @@ export default {
     }
   },
   methods:{
+    test2(){
+      console.log("TEST 2");
+    },
     selectEntity: function(entity){
       this.selectedEntity = entity;
+      this.showView = "ENTITY_EDIT";
     },
     selectAttribute: function(){
       this.showOption = 'ATTRIBUTE';
@@ -242,7 +261,7 @@ export default {
       this.selectedAction = data;
     },
     deselectAction(){
-      console.log("TRUE DESELECT");
+      console.log("TRUE DESELECT -");
       this.selectedAction = {empty:true};
     },
     copyEntity(){
@@ -255,20 +274,36 @@ export default {
       this.refresh+=1;
       this.$forceUpdate();
     },
-    removeEntity(){
+    removeEntity(test){
+      let findIndex;
+      this.selectedEntity[this.listName].forEach(function(row, index){
+        if(row == test) findIndex = index;
+      });
+      if (findIndex !== -1) {
+        this.selectedEntity[this.listName].splice(findIndex, 1);
+      }
+    },
+    remove(test){
+      console.log("TEST --------- ", test);
     },
     refreshArea(test){
       console.log("CLICK EVENT!", test);
       if(test) this.selectedEntity = test;
 
       this.showOption = 'ATTRIBUTE';
+      this.showView = "ENTITY_EDIT";
     },
     refreshInteractionList(){
       //console.log("check before", this.selectedInteraction);
       //this.selectedInteraction = {empty: true};
       //console.log("check after", this.selectedInteraction);
     },
-
+    showEntityTemplate(){
+      this.showView = "ENTITY_TEMPLATE";
+    },
+    showEntityEdit(){
+      this.showView = "ENTITY_EDIT";
+    }
 
   },
   mounted(){

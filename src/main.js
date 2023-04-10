@@ -12,6 +12,9 @@ import SelectSpecific  from '@/components/inputTemplate/selectSpecific.vue'
 //import Multiselect from 'vue-multiselect'
 import VueMultiselect from 'vue-multiselect'
 
+import 'gitart-vue-dialog/dist/style.css'
+import { GDialog } from 'gitart-vue-dialog'
+
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -23,6 +26,7 @@ app.component("vue-single-select", VueSingleSelect);
 app.component("SelectNameAndID", SelectNameAndID);
 app.component("SelectSpecific", SelectSpecific);
 app.component('VueMultiselect', VueMultiselect);
+app.component('GDialog', GDialog)
 
 app.mixin({
   methods: {

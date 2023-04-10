@@ -52,7 +52,6 @@
         <button v-on:click="showModal('FlagChanceOnStat')" 	class="pure-button action-button-p "> <h4> Chance Flags </h4>	</button>
         <button v-on:click="showModal('ItemFlag')"  				class="pure-button action-button-p "> <h4> Item Flags 	</h4>	</button>
         <button v-on:click="showModal('WorldFlag')" 				class="pure-button action-button-p "> <h4> World Flags 	</h4>	</button>
-        <button v-on:click="showModal('AreaFlag')" 					class="pure-button action-button-p "> <h4> Area Flags 	</h4>	</button>
         <button v-on:click="showModal('ScriptFlag')" 				class="pure-button action-button-p "> <h4> Script Flags </h4>	</button>
 				<button v-on:click="showModal('TimeFlag')" 					class="pure-button action-button-p "> <h4> Time Flags 	</h4>	</button>
 			</div>
@@ -79,21 +78,6 @@
       <Time :value="value"/>
       <MoveToArea :value="value"/>
       <ChoiceList :value="value"/>
-
-
-      <!--
-      <FlagStat   :value="value"/>
-      TODO: Complete Remove, inefficient design
-      <ToggleAreaFlag   :value="value"/>
-      <WorldFlag  :value="value"/>
-      <AreaFlag   :value="value"/>
-      <ScriptFlag :value="value"/>
-      -->
-      <!--
-      <FlagChanceOnStat :value="value"/>
-      <ItemFlag :value="value"/>
-      <TimeFlag :value="value"/>
-      -->
 		</section>
 
 		<div class="margin2" v-if="!value.empty">
@@ -105,7 +89,26 @@
 				<button class="button-error pure-button full-width"
 					v-on:click="remove();"> Remove </button>
 			</div>
-		</div>
+    </div>
+
+    <GDialog v-model="dialogState">
+      <WorldFlag v-if="modalName == 'WorldFlag'" :value="value" :modalName="modalName" />
+      <ItemFlag  v-if="modalName == 'ItemFlag'"  :value="value"/>
+      <ScriptFlag v-if="modalName == 'ScriptFlag'" :value="value"/>
+      <FlagChanceOnStat v-if="modalName == 'FlagChanceOnStat'" :value="value" />
+      <TimeFlag v-if="modalName == 'TimeFlag'" :value="value"/>
+      <FlagStat v-if="modalName == 'FlagStat'" :value="value"/>
+
+      <!--
+      <AreaFlag   :value="value"/>
+      TODO: Complete Remove, inefficient design
+      <ToggleAreaFlag   v-if="modalName == 'AreaFlag'"   :value="value"/>
+      -->
+      <!--
+      -->
+    </GDialog>
+
+
 
 
 	</div>
@@ -128,6 +131,7 @@ import Time from '@/components/scriptModifier/Time.vue'
 
 import ChoiceList from '@/components/scriptModifier/Choice.vue'
 
+import FlagChanceOnStat from '@/components/scriptCondition/FlagChanceOnStat.vue'
 import AreaFlag    from '@/components/scriptCondition/AreaFlag.vue'
 import WorldFlag   from '@/components/scriptCondition/WorldFlag.vue'
 import ScriptFlag  from '@/components/scriptCondition/ScriptFlag.vue'
@@ -135,7 +139,6 @@ import ItemFlag    from '@/components/scriptCondition/ItemFlag.vue'
 import FlagStat    from '@/components/scriptCondition/FlagStat.vue'
 import TimeFlag    from '@/components/scriptCondition/TimeFlag.vue'
 
-import FlagChanceOnStat from '@/components/scriptCondition/FlagChanceOnStat.vue'
 
 export default {
 	name: 'AreaList',
@@ -147,6 +150,8 @@ export default {
       error: null,
       styleObject: { color: 'red', fontSize: '13px' },
       stuff: {},
+      dialogState: false,
+      modalName: '',
     }
   },
   components: {
@@ -181,8 +186,10 @@ export default {
       this.$emit('deselectAction', {empty: true});
 		},
 		remove(){
-			console.log("remove");
-			this.$emit('remove');
+      console.log("--- remove ---");
+      //this.$emit('removeEntity', {empty: true});
+      this.$emit('removeEntity', this.value);
+      //this.$emit('remove');
 			//this.$emit('input', {deleted: true});
 			//this.$parent.removeAction();
 		},
@@ -193,20 +200,21 @@ export default {
     },
     toggleWorldFlag(){
       let template = {eventName: "toggle_flag", flag: true, name: ''};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
+
     },
     toggleAreaFlag(){
 			let template = {eventName: "toggle_area_flag", flag: true, name: ''};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
     toggleScriptFlag(){
       console.log("THIS THIS APP!")
 			let template = {eventName: "toggle_script_flag", flag: true, name: ''};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
     newMoveIndex(){
 			let template = {eventName: "set_script_current_index_to",  name: ''};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
     newItem(){
 			let template = {eventName: "item_modifier",  name: '', amount: 0};
@@ -242,15 +250,15 @@ export default {
     //-----------------------------------------------------------------
     simpleFlag(){
       let template = {ifCondition: "WORLD", condition_list: [{isList: [], notList: []}]};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
     simpleAreaFlag(){
 			let template = {ifCondition: "AREA", condition_list: [{area_is_list: [], area_not_list: []}]};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
     simpleScriptFlag(){
 			let template = {ifCondition: "SCRIPT", condition_list: [{scriptIsList: []}]};
-			this.refScriptList.push(template);
+      this.refScriptList.push(template);
     },
 		addIf(){
       this.refScriptList.push({ifCondition: "ADVANCED", condition_list: []});
@@ -271,7 +279,8 @@ export default {
     // Modal Conditions
     //-----------------------------------------------------------------
     showModal(name){
-      this.$modal.show(name);
+      this.dialogState = true;
+      this.modalName = name;
     },
 
     //-----------------------------------------------------------------

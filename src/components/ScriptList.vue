@@ -2,9 +2,11 @@
   <div>
     <div v-if="entity[listName]" class="">
       <div>
+        <div style="height: 3vh;">
+          {{error}}
+        </div>
 
         <div style="height: 75vh; overflow:auto;">
-          {{value}}
 
           <draggable
             v-model="refScript[listName]"
@@ -19,13 +21,11 @@
                 <div class="pure-u-1-24 script-row-index center"> {{index}}: </div>
                 <div class="pure-u-20-24" v-bind:style=[indexPush(index)]>
                   <div class="script-row-text" v-on:click="selectAction(element, index)"
-                    v-bind:style="[ value == element ? selected:
-                    {}]">
+                    v-bind:style="[ value == element ? selected: {}]">
                     {{element}}
                   </div>
                 </div>
                 <div class="pure-u-3-24" v-if="value == element">
-                  ?????
                 </div>
               </div>
             </template>
@@ -395,6 +395,20 @@ p {
 input:focus {
 	outline: none;
 	background: #e5e4e2;
+}
+
+.scrollable-div {
+  /* Set the height of the div and enable scrolling */
+  height: 300px;
+  overflow-y: scroll;
+  /* Hide the scrollbar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+/* Hide the scrollbar in Webkit-based browsers */
+.scrollable-div::-webkit-scrollbar {
+  display: none;
 }
 
 </style>

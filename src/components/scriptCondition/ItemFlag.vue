@@ -1,12 +1,5 @@
 <template>
   <section class="">
-   <modal name="ItemFlag"
-      :width="525"
-      :height="'auto'"
-      :shiftY="0.1"
-      :styles="'border: 3px solid black'"
-      :scrollable="true"
-    >
     <section class="modal-total-height margin3">
       <div class="this-title">
         Item Condition
@@ -36,7 +29,7 @@
 					</div>
 
 					<div class="">
-						<section class="" v-for="(item2, index2) in item1.hasStat" :key="index2">
+						<section class="" v-for="(item2, index2) in item1.hasItem" :key="index2">
 							<div>
 								<div class="pure-u-2-24">
 									<button v-on:click="type(item2)" class="pure-button full-width" style="height: 34px; font-size: 14px; width: 95%;">
@@ -45,25 +38,18 @@
                 </div>
 
 								<div class="pure-u-9-24">
-									<SelectNameAndID v-model="value.condition_list[index].hasStat[index2]" :list="list"/>
+									<SelectNameAndID :value="value.condition_list[index].hasItem[index2]" :list="list"/>
 								</div>
 
-								<div class="pure-u-3-24">
-									<v-select v-model="item2.operator" :options="operatorList" @input="updateNow" :clearable="false">
-										<template #selected-option="{}">
-											<div class="v-font">
-												{{item2.operator}}
-											</div>
-										</template>
-										<template #option="{label}">
-											<div class="v-font">
-												{{label}}
-											</div>
-										</template>
-										<template #open-indicator="{ attributes }">
-											<span v-bind="attributes"></span>
-										</template>
-									</v-select>
+                <div class="pure-u-3-24">
+                 <VueMultiselect
+                      v-model="item2.operator"
+                      :options="operatorList"
+                      :multiple="false"
+                      :show-labels="false"
+                    >
+                    </VueMultiselect>
+
 								</div>
 
 								<div class="pure-u-4-24">
@@ -72,12 +58,12 @@
 								<div class="pure-u-1-24"></div>
 								<div class="pure-u-3-24"></div>
 								<div class="pure-u-1-24">
-									<button v-on:click="cut(item1.hasStat, index2)" class="pure-button full-width" style="height: 34px;">
+									<button v-on:click="cut(item1.hasItem, index2)" class="pure-button full-width" style="height: 34px;">
 										<div style="position: relative; right: 5px;"> X </div>
 									</button>
 								</div>
 							</div>
-							<br v-if="index2 != item1.hasStat.length-1" class="br-thin">
+							<br v-if="index2 != item1.hasItem.length-1" class="br-thin">
 							</section>
 							<section class="">
 								<br>
@@ -103,7 +89,6 @@
 				</div>
 			</div>
     </section>
-  </modal>
   </section>
 </template>
 
@@ -118,25 +103,26 @@ export default {
     return {
       operatorList: [">", ">=", "==", "<=", "<"],
       templateObj : [
-        {hasStat: [{operator: ">"}] }
+        {hasItem: [{operator: ">"}] }
       ],
       template: {operator: ">"},
 			list: this.$root.world.group.item.list,
     }
   },
-  props: ['value'],
+  props: ['value', 'modalName'],
   watch: {},
   mounted(){},
   methods:{
 		additionalAnd(index){
 			console.log("CHECK!");
-			if(!this.value.condition_list[index].hasStat){
-				this.$set(this.value.condition_list[index], 'hasStat', []);
+			if(!this.value.condition_list[index].hasItem){
+        //this.$set(this.value.condition_list[index], 'hasItem', []);
+        this.value.condition_list[index].hasItem = [];
 			}
-			this.value.condition_list[index].hasStat.push({operator: ">", type: "#"});
+			this.value.condition_list[index].hasItem.push({operator: ">", type: "#"});
 		},
     additionalOr(){
-      this.value.condition_list.push({hasStat: [{operator: ">", type: "#"}]});
+      this.value.condition_list.push({hasItem: [{operator: ">", type: "#"}]});
     },
     additionalList(){
       this.value.condition_list.push({operator: ">", type: "#"});
@@ -152,7 +138,7 @@ export default {
     cutConfirm(list, index){
       console.log(list);
       if(!confirm("DELETE" + JSON.stringify(list))) return true;
-      list[index].hasStat = [];
+      list[index].hasItem = [];
     },
     closeModal(){
       this.$modal.hide('flagStatModal');

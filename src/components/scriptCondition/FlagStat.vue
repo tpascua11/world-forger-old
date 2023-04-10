@@ -1,12 +1,5 @@
 <template>
   <section class="">
-   <modal name="FlagStat"
-      :width="525"
-      :height="'auto'"
-      :shiftY="0.1"
-      :styles="'border: 3px solid black'"
-      :scrollable="true"
-    >
     <section class="modal-total-height margin3">
       <div class="this-title">
         Stat Condition
@@ -43,42 +36,18 @@
 										{{item2.type}}
 									</button>
 								</div>
-								<div class="pure-u-9-24">
+                <div class="pure-u-9-24">
 									<SelectNameAndID :value="value.condition_list[index].hasStat[index2]" :list="list"/>
-										<!--
-									<v-select v-model="item2.name" :options="flagList" label="id" @input="updateNow" :clearable="false">
-										<template #selected-option="{}">
-											<div class="v-font">
-												{{list[item2.id].name}}
-											</div>
-										</template>
-										<template #option="{id}">
-											<div class="v-font">
-												{{list[id].name}}
-											</div>
-										</template>
-									</v-select>
-										-->
 								</div>
 
                 <div class="pure-u-3-24">
-                  <!--
-									<v-select v-model="item2.operator" :options="operatorList" @input="updateNow" :clearable="false">
-										<template #selected-option="{}">
-											<div class="v-font">
-												{{item2.operator}}
-											</div>
-										</template>
-										<template #option="{label}">
-											<div class="v-font">
-												{{label}}
-											</div>
-										</template>
-										<template #open-indicator="{ attributes }">
-											<span v-bind="attributes"></span>
-										</template>
-                  </v-select>
-                  -->
+                  <VueMultiselect
+                    v-model="item2.operator"
+                    :options="operatorList"
+                    :multiple="false"
+                    :show-labels="false"
+                  >
+                  </VueMultiselect>
 								</div>
 
 								<div class="pure-u-4-24">
@@ -118,7 +87,6 @@
 				</div>
 			</div>
     </section>
-  </modal>
   </section>
 </template>
 
@@ -148,7 +116,8 @@ export default {
 		additionalAnd(index){
 			console.log("CHECK!");
 			if(!this.value.condition_list[index].hasStat){
-				this.$set(this.value.condition_list[index], 'hasStat', []);
+        //this.$set(this.value.condition_list[index], 'hasStat', []);
+        this.value.condition_list[index].hasStat = [];
 			}
 			this.value.condition_list[index].hasStat.push({operator: ">", type: "#"});
 		},

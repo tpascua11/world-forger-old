@@ -1,14 +1,7 @@
 <template>
-  <section class="">
-    <modal name="WorldFlag"
-      :width="525"
-      :height="'auto'"
-      :shiftY="0.2"
-      :styles="'border: 2px solid black'"
-      :scrollable="true"
-    >
+  <section>
       <section class="modal-total-height margin3">
-            <div class="this-title">
+        <div class="this-title">
               World Flag
             </div>
           <section>
@@ -35,13 +28,14 @@
                   <div class="pure-u-2-24"></div>
                   <div class="pure-u-2-24 position-co"> IS </div>
                   <div class="pure-u-20-24">
-                    <v-select v-model="item.isList"  :options="trueList(item)" :multiple="true" class=" " placeholder="Add Flag"> 
-                      <template #selected-option-container="{ option}">
-                        <div style="height: 30px; font-size: 15px;"
-                          class="vs__selected">{{ option.label }}
-                        </div>
-                      </template>
-                    </v-select>
+                    <VueMultiselect
+                      v-model="item.isList"
+                      :options="trueList(item)"
+                      :multiple="true"
+                      :show-labels="false"
+                    >
+                    </VueMultiselect>
+
                   </div>
                 </div>
                 <br class="br-thin">
@@ -49,13 +43,14 @@
                   <div class="pure-u-2-24"></div>
                   <div class="pure-u-2-24 position-co"> NOT </div>
                   <div class="pure-u-20-24">
-                    <v-select v-model="item.notList" :options="trueList(item)" :multiple="true" class=" " placeholder="Add Flag"> 
-                      <template #selected-option-container="{ option}">
-                        <div style="height: 30px; font-size: 15px;"
-                          class="vs__selected">{{ option.label }}
-                        </div>
-                      </template>
-                    </v-select>
+                    <VueMultiselect
+                      v-model="item.notList"
+                      :options="trueList(item)"
+                      :multiple="true"
+                      :show-labels="false"
+                    >
+                    </VueMultiselect>
+
                   </div>
                 </div>
               </div>
@@ -65,8 +60,7 @@
           <button v-on:click="addNewList" class="pure-button full-width">
             Add New List
           </button>
-      </section>
-    </modal>
+        </section>
   </section>
 </template>
 
@@ -81,7 +75,7 @@ export default {
       flagList: Object.keys(this.$root.world.flagMap),
     }
   },
-  props: ['value'],
+  props: ['value', 'modalName'],
   watch: {},
   mounted(){
     console.log("CHECK DID THIS WORK!");
@@ -99,11 +93,12 @@ export default {
       return isList.some( ai => notList.includes(ai) );
     },
     addNewList(){
+      if(!this.value.condition_list) this.value.condition_list = [];
       this.value.condition_list.push({isList: [], notList: []});
     },
     addThisSet(index){
-      this.$set(this.value.condition_list[index], 'isList', []);
-      this.$set(this.value.condition_list[index], 'notList', []);
+      this.value.condition_list[index].isList = [];
+      this.value.condition_list[index].notList = [];
     },
     removeAtIndex(index){
       this.value.condition_list.splice(index, 1);

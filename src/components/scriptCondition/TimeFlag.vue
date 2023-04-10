@@ -1,12 +1,5 @@
 <template>
   <section class="">
-   <modal name="TimeFlag"
-      :width="650"
-      :height="'auto'"
-      :shiftY="0.1"
-      :styles="'border: 2px solid black'"
-      :scrollable="true"
-    >
     <section class="modal-total-height">
       <div class="row this-title">
         Flag Condition
@@ -80,7 +73,6 @@
         </button>
       </div>
     </section>
-  </modal>
   </section>
 </template>
 
@@ -109,7 +101,10 @@ export default {
 			console.log("CHECK! INDEX FIRE!!!", this.value.condition_list[index]);
       if(!this.value.condition_list[index].time){
         console.log("-???");
-				this.$set(this.value.condition_list[index], 'time', {after: {}, before: {}});
+        //this.$set(this.value.condition_list[index], 'time', {after: {}, before: {}});
+        this.value.condition_list[index]['time'] = {};
+        this.value.condition_list[index]['time'].after  = {};
+        this.value.condition_list[index]['time'].before= {};
 			}
 			//this.value.condition_list[index].hasItem.push({operator: ">"});
 		},
