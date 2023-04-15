@@ -5,14 +5,14 @@
     </div>
 
     <!-- Entity List Selector -->
-    <div class="pure-u-3-24 dt-border-x2">
+    <div class="pure-u-3-24 dt-border-x2" style="max-height='50vh'">
       <div>
       </div>
       <JustList
         v-model="selectedEntity"
         v-bind:map="thisMapList"
         v-bind:title="title"
-        v-bind:set_height="'450px'"
+        v-bind:set_height="'550px'"
         v-bind:template="thisMap.template"
         v-bind:templateInfo="thisMap.templateInfo"
         @selected="refreshArea"
@@ -25,9 +25,9 @@
     <div class="pure-u-1-24" >
     </div>
 
-    <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-17-24">
+    <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-18-24">
       <Attribute
-        v-bind:entity_name="'item'"
+        v-bind:entity_name="entityName"
       />
     </div>
 
@@ -102,6 +102,12 @@
                   <StatList v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'stat'"/>
                 </div>
                 <hr>
+              </div>
+              <div v-else-if="templateInfo[index].isList">
+                <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
+                  <input class="borderless-gray" placeholder="name..."
+                    v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
+                </div>
               </div>
               <div v-else-if="templateInfo[index].type == 'list_custom'">
                 <ListCustom
@@ -219,6 +225,7 @@ export default {
       refresh: 0,
       showView: 'entityEdit',
       entityName: 'item',
+      tempName: [],
     };
   },
   props: {
@@ -303,8 +310,13 @@ export default {
     },
     showEntityEdit(){
       this.showView = "ENTITY_EDIT";
-    }
-
+    },
+    addToList(list, type){
+      console.log("WHAT IS LIST", list);
+      if(type == 'string') list.push('');
+      else if(type == 'number') list.push(0);
+      else if(type == 'currentAndMax') list.push({current: 0, max: 0});
+    },
   },
   mounted(){
   }

@@ -99,9 +99,20 @@ export default {
     copyFromTemplateInfo: function(){
       console.log("Can i see if this exist", JSON.stringify(this.templateInfo));
       let newEntity = {};
-      Object.keys(this.templateInfo).forEach(key => {
-        if(!this.templateInfo[key]) return;
-        if(this.templateInfo[key].default_set){
+			Object.keys(this.templateInfo).forEach(key => {
+				if(!this.templateInfo[key]) return;
+				if(this.templateInfo[key].isList){
+					newEntity[key] = {};
+					Object.keys(this.templateInfo[key].referenceList).forEach(key2 => {
+						let name = this.templateInfo[key].referenceList[key2].name;
+						if(this.templateInfo[key].type == 'number' ) newEntity[key][name] = 0;
+						else if(this.templateInfo[key].type == 'string' ) newEntity[key][name] = '';
+						else if(this.templateInfo[key].type == 'currentAndMax' ) newEntity[key][name] = {current: 0, max: 0};
+						//else if(this.templateInfo[key].type == 'currentAndMax' ) newEntity[key] = {'hp': {current: 0, max: 10}};
+						//:wconsole.log("TEST!?", newEntity[key]);
+					});
+				}
+				else if(this.templateInfo[key].default_set){
           newEntity[key] = JSON.parse(JSON.stringify(this.templateInfo[key].default_set));
         }
         else if(this.templateInfo[key].type == 'string'){

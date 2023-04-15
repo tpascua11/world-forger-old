@@ -20,7 +20,7 @@
               <div class="pure-u-18-24">
                 <div v-for="(item, index) in valueOptions" :key="index"
                   class="pure-u-5-24 row-text">
-                  {{nameCap(index)}}
+                  -- {{nameCap(index)}}
                 </div>
               </div>
             </section>
