@@ -3,7 +3,7 @@
   <div class="container dt-border" style="min-height: 500px;">
     <!-- Headers -->
     <div class="pure-g title">
-      <div class="pure-u-3-24" >
+      <div class="pure-u-4-24" >
         Name
       </div>
       <div class="pure-u-3-24" >
@@ -18,6 +18,11 @@
       <div class="pure-u-6-24" >
         Reference Focus
       </div>
+      <div class="pure-u-2-24">
+        <button class="attribute__button" @click="setKeyPosition()">
+          Reposition
+        </button>
+      </div>
     </div>
 
     <!-- Body -->
@@ -25,10 +30,14 @@
 
     <div v-for="(value, key) in attributes" :key="key">
       <div class="pure-g" style="z-index=2"> <!-- Base -->
-        <div class="pure-u-3-24" >
+        <div class="pure-u-4-24" >
+          <button class="attribute__button" @click="selectProperty(key, attributes)">
+            {{value.name}} -
+          </button>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
-          -->
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
+
+          -->
         </div>
         <div class="pure-u-3-24" >
           <VueMultiselect
@@ -89,7 +98,38 @@
         </div>
 
       </div>
+    </div>
+    <GDialog v-model="dialogState">
+      <div>
+        <p>Original name: {{selectedPropertyName}}</p>
+        <label for="new-name">New name:</label>
+        <input id="new-name" type="text" v-model="rename">
+        <button @click="renameProperty()">Change Property Name</button>
+        <p>New name: {{this.rename}}</p>
       </div>
+    </GDialog>
+    <GDialog v-model="dialogPosition">
+      <div>
+        <draggable
+          v-model="keyPositionList"
+          @start="drag=true"
+          @end="drag=false"
+          tag="div"
+          item-key="index">
+          <template #item="{element, index}">
+            <div class="script-row" style="height:20">
+              <div class="pure-u-1-24 script-row-index center"> {{index}}: </div>
+              <div class="pure-u-20-24">
+                <div>
+                  {{element}}
+                </div>
+              </div>
+            </div>
+          </template>
+        </draggable>
+         <button class="attribute__button" @click="resetKeyPosition()"> Reset Key</button>
+			</div>
+    </GDialog>
     </div>
 
   <br><br>
@@ -126,8 +166,13 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
 export default {
   props: ['value', 'entityName', 'entity_name'],
+  components: {
+    draggable,
+  },
   data() {
     return {
       character: {},
@@ -149,6 +194,13 @@ export default {
         { name: 'Phoenix', language: 'Elixir' }
       ],
       dtest: null,
+      dialogState: false,
+      selectedProperty: {},
+      selectedPropertyName: '',
+      rename: '',
+      dialogPosition: false,
+      keyPositionList: [],
+
     }
   },
   methods: {
@@ -302,8 +354,66 @@ export default {
       }
 
       return newEntity;
-    }
+    },
+    selectProperty(name, property){
+      this.dialogState = true;
+      this.selectedProperty = property;
+      this.selectedPropertyName = name;
+      this.rename = '';
 
+      console.log("SEE PROPERTY NOW", this.selectedProperty);
+      console.log("SEE PROPERTY GO!", this.selectedPropertyName);
+    },
+    renameProperty(){
+      let list = this.$root.world.group['item'].list;
+      let newList = {};
+
+      Object.keys(list).forEach(key => {
+        console.log("what is key", list[key]);
+          list[key][this.rename] =
+          list[key][this.selectedPropertyName];
+          delete list[key][this.selectedPropertyName];
+      });
+      console.log("....??????");
+
+      let setup = this.$root.world.group['item'].templateInfo;
+      console.log('BEFORE', JSON.stringify(setup));
+
+      setup[this.rename] = setup[this.selectedPropertyName];
+      this.attributes[this.rename] = this.attributes[this.selectedPropertyName];
+      this.attributes[this.rename].name = this.rename;
+
+      delete setup[this.selectedPropertyName];
+      delete this.attributes[this.selectedPropertyName];
+
+      console.log('AFTER', JSON.stringify(setup));
+    },
+    setKeyPosition(){
+      this.dialogPosition = true;
+      this.keyPositionList = Object.keys(this.attributes);
+    },
+    resetKeyPosition(){
+      let newAttributes = {};
+      console.log("new position", JSON.stringify(this.attributes));
+      this.keyPositionList.forEach(function(key){
+        newAttributes[key] = this.attributes[key];
+      }, this);
+      console.log("NEW ATTRIBUTES", newAttributes);
+      this.attributes = newAttributes;
+    },
+    moveItem(index, offset) {
+      //const keys = Object.keys(this.keyPositionList);
+      //let keys = this.keyPositionList;
+      const key = this.keyPositionList[index]
+      const newIndex = index + offset
+
+      if (newIndex < 0 || newIndex >= this.keyPositionList.length) {
+        return;
+      }
+
+      this.keyPositionList.splice(index, 1);
+      this.keyPositionList.splice(newIndex, 0, key);
+    },
   },
   mounted() {
     let tmp = this.$root.world.group['item'];
