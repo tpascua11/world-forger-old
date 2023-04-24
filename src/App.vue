@@ -1,10 +1,22 @@
 <template>
-  <nav>
+	<div>
+	<nav>
+		<!--
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
 		<router-link to="/test">Test</router-link> |
-    <router-link to="/entity">entity</router-link>
-  </nav>
+		<router-link to="/entity">entity</router-link>
+		-->
+	</nav>
+	<div class="fixedBottom">
+  		<h2>Entity</h2>
+			<ul>
+				<li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
+					{{ navItem }}
+				</li>
+			</ul>
+		</div>
+	</div>
   <router-view />
 </template>
 
@@ -16,6 +28,8 @@ export default {
 	data: function() {
 		return {
 			world: new World(),
+			entityGroup: [],
+			test2: [1,2,3],
 		};
 	},
 	methods:{
@@ -28,6 +42,14 @@ export default {
 		},
 		saveToLocalStorage(){
 			localStorage.setItem('currentWorld', JSON.stringify(this.world));
+		},
+		allEntityList(){
+			//let groupName = Object.keys(this.group);
+			//console.log("what is group", groupName);
+			//return groupName;
+		},
+		selectEntityTable(entityName){
+			console.log("Select Entity Table", entityName);
 		}
 	},
 	mounted() {
@@ -36,14 +58,23 @@ export default {
 		console.log("lets see stored world", JSON.parse(storedWorld));
 		this.world = JSON.parse(storedWorld);
 		 */
+
 		this.$root.world = this.world;
-		this.$root.group = this.group;
+		//this.$root.group = this.group;
+
+		//console.log("CHECK", JSON.stringify(this.$root.world.group));
+		this.entityGroup = this.$root.world.group;
+		//console.log("GROUP", this.group);
+
 
 	},
 	computed:{
 		loadWhichWorld(){
 			return new World();
-		}
+		},
+		seeEntityGroup(){
+			return Object.keys(this.entityGroup);
+		},
 	}
 }
 </script>
@@ -375,6 +406,43 @@ p{
 .pure-u {
 	font-family: "Neucha";
 }
+
+</style>
+
+<style scoped>
+			.fixedBottom {
+				position: fixed;
+        bottom: 0;
+				left: 0;
+        width: 100%;
+			}
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        background-color: #f2f2f2;
+        border-top: 1px solid #ccc;
+				overflow-x: scroll;
+      }
+      li {
+        margin-right: 10px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: #ccc;
+        color: #333;
+        transition: background-color 0.2s ease;
+        font-size: 16px;
+				font-weight: bold;
+      }
+      li:hover {
+        background-color: #666;
+        color: #fff;
+      }
 
 </style>
 

@@ -32,7 +32,7 @@
       <div class="pure-g" style="z-index=2"> <!-- Base -->
         <div class="pure-u-4-24" >
           <button class="attribute__button" @click="selectProperty(key, attributes)">
-            {{value.name}} -
+            {{value.name}}
           </button>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
@@ -142,13 +142,6 @@
            type="text" v-model="newAttribute" />
 
          <button class="attribute__button" @click="addAttribute()">Add new Attribute </button>
-
-    <!--
-    <button class="attribute__button" @click="addMaxCurrent()">string</button>
-    <button class="attribute__button" @click="addMaxCurrent()">string list</button>
-    <button class="attribute__button" @click="addMaxCurrent()">currentAndMax </button>
-    <button class="attribute__button" @click="addMaxCurrent()">currentAndMax list</button>
-    -->
   </div>
   <div>
     <ul>
@@ -204,6 +197,7 @@ export default {
     }
   },
   methods: {
+    test(){console.log("TEST")},
     newSetup(name, dataType, dataFormat, referenceTo){
       let tmp = {name: name};
       tmp.referenceTo = referenceTo ? referenceTo: '';
@@ -211,9 +205,6 @@ export default {
       tmp.dataFormat = dataFormat ? dataFormat: 'default';
       tmp.data = [];
       return tmp;
-    },
-    test(){console.log("TEST")},
-    submitForm() {
     },
     addAttribute() {
       const newName = this.newAttribute;
@@ -224,39 +215,11 @@ export default {
         else this.attributes[newName] = this.newSetup(newName, 'number', '', '');
       }
     },
-    addMaxCurrent(){
-      const newName = this.newAttribute;
-      if (this.newAttribute) {
-        this.attributes[newName] = this.newSetup(newName, '', 'currentAndMax',
-          '');
-      }
-    },
-    addReferenceTo(){
-      if (this.newAttribute) {
-        //this.attributes[this.newAttribute] = {current: 0, max: 0};
-      }
-    },
-    addNumber(){
-      if (this.newAttribute) {
-        //this.attributes[this.newAttribute] = -1;
-      }
-    },
-    addString(){
-      if (this.newAttribute) {
-        this.attributes[this.newAttribute] = 'string...';
-      }
-    },
-    addData(list, newData){
-      if(!list) list = [];
-      list.push(newData);
-    },
     newEntityReference(entityName){
       return this.objectListToList(this.$root.world.group[entityName].list);
-      //return this.$root.world.group[entityName].list;
     },
     buildEntity(){
       let newTemplateInfo = {};
-      //console.log("THIS ATTRIBUTES", this.attributes);
 
       Object.keys(this.attributes).forEach(key => {
         let tmp = this.attributes[key];
@@ -269,34 +232,23 @@ export default {
         };
       });
 
-      //console.log("NEW TEMPLATE INFO", JSON.stringify(newTemplateInfo));
-      //console.log("VALUE", this.value);
       this.$root.world.group['item'].templateInfo = newTemplateInfo;
-
       this.$root.world.group['item'].buildInfo = this.attributes;
       this.rebuildEntityList();
 
     },
     rebuildEntityList(){
       let setup = this.$root.world.group['item'].templateInfo;
-      //console.log("what is setup", JSON.stringify(setup));
-
       let refList = this.$root.world.group['item'],templateInfo;
-      //console.log("what is refList", JSON.stringify(refList));
 
       let list = this.$root.world.group['item'].list;
       let newList = {};
 
       Object.keys(list).forEach(key => {
-        //console.log("PART 1 ---", key, JSON.stringify(list[key]));
-        //console.log("ref list", JSON.stringify(refList));
-        //newList[key] = list[key];
         if(!newList[key]) newList[key] = {};
 
         for (let property in setup) {
           let flist = setup[property].referenceList;
-          //console.log("NEW FIRE", JSON.stringify(flist));
-
           if(setup[property].isList){
             newList[key][property] = {};
             Object.keys(flist).forEach(key2 => {
@@ -312,72 +264,51 @@ export default {
           }
         }
       });
-      console.log("Modified Entity List", JSON.stringify(newList));
       this.$root.world.group['item'].list = newList;
     },
-    listFormat(entityWithList, setup){
-      Object.keys(entityWithList).forEach(key => {
-        console.log("row", key);
-        newList[key] = list[key];
-        for (let property in setup) {
-          newList[key][property] = this.reformatEntity(list[key][[property]], property);
-        }
-      });
-    },
     reformatEntity(entity, key){
-      console.log("ENTITY", entity);
       let setup = this.$root.world.group['item'].templateInfo;
       let varType = typeof entity;
-      console.log("VARTYPE", varType);
       let newEntity;
       let fixProp = setup[key].type;
 
       if(fixProp == 'string' && varType != 'string'){
-        console.log("STRING!");
         newEntity = '';
       }
       else if(fixProp == 'number' && varType != 'number'){
-        console.log("NUMBER!");
         newEntity = 0;
       }
       else if(fixProp == 'scriptList' && !Array.isArray(entity)){
-        console.log("SCRIPT LIST!");
         newEntity = [];
       }
       else if(fixProp == 'currentAndMax' && varType != 'object'){
-        console.log("CURRENT AND MAX!");
         newEntity = {current: 0, max: 0};
       }
       else{
         newEntity = entity;
-        console.log("...........");
       }
 
       return newEntity;
     },
+
+    //----- Position Changer -----
     selectProperty(name, property){
       this.dialogState = true;
       this.selectedProperty = property;
       this.selectedPropertyName = name;
       this.rename = '';
-
-      console.log("SEE PROPERTY NOW", this.selectedProperty);
-      console.log("SEE PROPERTY GO!", this.selectedPropertyName);
     },
     renameProperty(){
       let list = this.$root.world.group['item'].list;
       let newList = {};
 
       Object.keys(list).forEach(key => {
-        console.log("what is key", list[key]);
           list[key][this.rename] =
           list[key][this.selectedPropertyName];
           delete list[key][this.selectedPropertyName];
       });
-      console.log("....??????");
 
       let setup = this.$root.world.group['item'].templateInfo;
-      console.log('BEFORE', JSON.stringify(setup));
 
       setup[this.rename] = setup[this.selectedPropertyName];
       this.attributes[this.rename] = this.attributes[this.selectedPropertyName];
@@ -386,7 +317,6 @@ export default {
       delete setup[this.selectedPropertyName];
       delete this.attributes[this.selectedPropertyName];
 
-      console.log('AFTER', JSON.stringify(setup));
     },
     setKeyPosition(){
       this.dialogPosition = true;
@@ -394,35 +324,15 @@ export default {
     },
     resetKeyPosition(){
       let newAttributes = {};
-      console.log("new position", JSON.stringify(this.attributes));
       this.keyPositionList.forEach(function(key){
         newAttributes[key] = this.attributes[key];
       }, this);
-      console.log("NEW ATTRIBUTES", newAttributes);
       this.attributes = newAttributes;
-    },
-    moveItem(index, offset) {
-      //const keys = Object.keys(this.keyPositionList);
-      //let keys = this.keyPositionList;
-      const key = this.keyPositionList[index]
-      const newIndex = index + offset
-
-      if (newIndex < 0 || newIndex >= this.keyPositionList.length) {
-        return;
-      }
-
-      this.keyPositionList.splice(index, 1);
-      this.keyPositionList.splice(newIndex, 0, key);
     },
   },
   mounted() {
     let tmp = this.$root.world.group['item'];
     if(tmp.buildInfo)  this.attributes = tmp.buildInfo;
-    /*
-    this.attributes.forEach(attribute => {
-      this.$set(this.character, attribute, '');
-    });
-     */
   }
 }
 </script>

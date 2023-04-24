@@ -1,13 +1,10 @@
 <template>
-  <div>
   <div class="pure-g">
     <div class="pure-u-1-24" >
     </div>
 
     <!-- Entity List Selector -->
     <div class="pure-u-3-24 dt-border-x2" style="max-height='50vh'">
-      <div>
-      </div>
       <JustList
         v-model="selectedEntity"
         v-bind:map="thisMapList"
@@ -171,7 +168,6 @@
     </div>
 
 
-  </div>
   </div>
 </template>
 
