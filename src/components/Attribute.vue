@@ -32,7 +32,7 @@
       <div class="pure-g" style="z-index=2"> <!-- Base -->
         <div class="pure-u-4-24" >
           <button class="attribute__button" @click="selectProperty(key, attributes)">
-            {{value.name}}
+            {{value.name}} 
           </button>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
@@ -144,11 +144,13 @@
          <button class="attribute__button" @click="addAttribute()">Add new Attribute </button>
   </div>
   <div>
+    <!--
     <ul>
       <li v-for="(value, key) in attributes" :key="key">
         {{ key }}: {{ value }}
       </li>
     </ul>
+    -->
   </div>
   <div>
     <button class="attribute__button" @click="buildEntity()">Build </button>
@@ -162,7 +164,10 @@
 import draggable from 'vuedraggable'
 
 export default {
-  props: ['value', 'entityName', 'entity_name'],
+  //props: ['value', 'entityName', 'entity_name'],
+  props:{
+    entityName: String
+  },
   components: {
     draggable,
   },
@@ -175,8 +180,9 @@ export default {
       newAttribute: '',
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
-      dataTypeOption: ['number', 'string','currentAndMax', 'scriptList'],
-      listOption: [true, 'ALL'],
+      dataTypeOption: [ 'number', 'string','currentAndMax'
+                       ,'boolean', 'scriptList'],
+      listOption: ['all', 'select', 'multiselect'],
       dataFormatOption: ['default', 'currentAndMax'],
       referenceGroup: Object.keys(this.$root.world.group),
       options: [
@@ -215,8 +221,8 @@ export default {
         else this.attributes[newName] = this.newSetup(newName, 'number', '', '');
       }
     },
-    newEntityReference(entityName){
-      return this.objectListToList(this.$root.world.group[entityName].list);
+    newEntityReference(name){
+      return this.objectListToList(this.$root.world.group[name].list);
     },
     buildEntity(){
       let newTemplateInfo = {};
@@ -232,16 +238,16 @@ export default {
         };
       });
 
-      this.$root.world.group['item'].templateInfo = newTemplateInfo;
-      this.$root.world.group['item'].buildInfo = this.attributes;
+      this.$root.world.group[this.entityName].templateInfo = newTemplateInfo;
+      this.$root.world.group[this.entityName].buildInfo = this.attributes;
       this.rebuildEntityList();
 
     },
     rebuildEntityList(){
-      let setup = this.$root.world.group['item'].templateInfo;
-      let refList = this.$root.world.group['item'],templateInfo;
+      let setup = this.$root.world.group[this.entityName].templateInfo;
+      let refList = this.$root.world.group[this.entityName],templateInfo;
 
-      let list = this.$root.world.group['item'].list;
+      let list = this.$root.world.group[this.entityName].list;
       let newList = {};
 
       Object.keys(list).forEach(key => {
@@ -264,10 +270,10 @@ export default {
           }
         }
       });
-      this.$root.world.group['item'].list = newList;
+      this.$root.world.group[this.entityName].list = newList;
     },
     reformatEntity(entity, key){
-      let setup = this.$root.world.group['item'].templateInfo;
+      let setup = this.$root.world.group[this.entityName].templateInfo;
       let varType = typeof entity;
       let newEntity;
       let fixProp = setup[key].type;
@@ -299,7 +305,7 @@ export default {
       this.rename = '';
     },
     renameProperty(){
-      let list = this.$root.world.group['item'].list;
+      let list = this.$root.world.group[this.entityName].list;
       let newList = {};
 
       Object.keys(list).forEach(key => {
@@ -308,7 +314,7 @@ export default {
           delete list[key][this.selectedPropertyName];
       });
 
-      let setup = this.$root.world.group['item'].templateInfo;
+      let setup = this.$root.world.group[this.entityName].templateInfo;
 
       setup[this.rename] = setup[this.selectedPropertyName];
       this.attributes[this.rename] = this.attributes[this.selectedPropertyName];
@@ -331,8 +337,12 @@ export default {
     },
   },
   mounted() {
-    let tmp = this.$root.world.group['item'];
-    if(tmp.buildInfo)  this.attributes = tmp.buildInfo;
+    console.log("ENTITY NAME", this.entityName)
+    let tmp = this.$root.world.group[this.entityName];
+    console.log("TEMP", tmp);
+    if(tmp.buildInfo){
+      this.attributes = tmp.buildInfo;
+    }
   }
 }
 </script>

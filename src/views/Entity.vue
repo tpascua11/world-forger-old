@@ -20,11 +20,13 @@
     </div>
 
     <div class="pure-u-1-24" >
+
+      {{entityName}} -- 12312
     </div>
 
     <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-18-24">
       <Attribute
-        v-bind:entity_name="entityName"
+        v-bind:entityName="groupEntity"
       />
     </div>
 
@@ -206,8 +208,8 @@ export default {
     return {
       //groupEntity: 'character',
       name: "Character",
-      groupEntity: "item",
-      title: "Item",
+      //groupEntity: "item",
+      //title: "Item",
 
       selectedAction: {empty: true},
       selectedInteraction: {},
@@ -220,13 +222,16 @@ export default {
       showOption: 'ATTRIBUTE',
       refresh: 0,
       showView: 'entityEdit',
-      entityName: 'item',
+      //entityName: 'item',
       tempName: [],
     };
   },
   props: {
     //groupEntity: String,
     //title: String
+    entityName: String,
+    title: String,
+    groupEntity: String,
   },
   computed: {
     thisMap: function(){

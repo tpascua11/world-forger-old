@@ -9,12 +9,14 @@
 		-->
 	</nav>
 	<div class="fixedBottom">
-  		<h2>Entity</h2>
-			<ul>
+		<!--
+		<ul>
 				<li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
 					{{ navItem }}
 				</li>
 			</ul>
+
+		-->
 		</div>
 	</div>
   <router-view />
@@ -49,7 +51,9 @@ export default {
 			//return groupName;
 		},
 		selectEntityTable(entityName){
-			console.log("Select Entity Table", entityName);
+			this.$root.selectedEntityTableName = entityName;
+			console.log("Select Entity Table", this.$root.selectedEntityTableName);
+			this.$forceUpdate();
 		}
 	},
 	mounted() {
@@ -66,7 +70,8 @@ export default {
 		this.entityGroup = this.$root.world.group;
 		//console.log("GROUP", this.group);
 
-
+		//this.$root.value = '';
+		this.$root.selectedEntityTableName = '';
 	},
 	computed:{
 		loadWhichWorld(){
@@ -414,14 +419,14 @@ p{
 				position: fixed;
         bottom: 0;
 				left: 0;
-        width: 100%;
+				width: 100%;
+
 			}
       ul {
         list-style-type: none;
-        padding: 0;
+        padding: 0.2;
         margin: 0;
         display: flex;
-        justify-content: center;
         align-items: center;
         height: 50px;
         background-color: #f2f2f2;
