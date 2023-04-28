@@ -29,10 +29,10 @@
     <div class="body">
 
     <div v-for="(value, key) in attributes" :key="key">
-      <div class="pure-g" style="z-index=2"> <!-- Base -->
+      <div v-if="value.name != 'name'" class="pure-g" style="z-index=2"> <!-- Base -->
         <div class="pure-u-4-24" >
           <button class="attribute__button" @click="selectProperty(key, attributes)">
-            {{value.name}} 
+            {{value.name}}
           </button>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
@@ -174,14 +174,14 @@ export default {
   data() {
     return {
       character: {},
-      attributes: {},
+      attributes: {name: {name: 'name', dataType: 'string', dataFormat: 'string'}},
       setup: {dataType: 'list', referenceTo: '', dataFormat: 'currentAndMax',
         isList: false, data: [], referenceList: []},
       newAttribute: '',
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
       dataTypeOption: [ 'number', 'string','currentAndMax'
-                       ,'boolean', 'scriptList'],
+                       ,'boolean', 'script_list'],
       listOption: ['all', 'select', 'multiselect'],
       dataFormatOption: ['default', 'currentAndMax'],
       referenceGroup: Object.keys(this.$root.world.group),
@@ -242,6 +242,9 @@ export default {
       this.$root.world.group[this.entityName].buildInfo = this.attributes;
       this.rebuildEntityList();
 
+      console.log("BUILD INFO",
+        this.$root.world.group[this.entityName].buildInfo);
+
     },
     rebuildEntityList(){
       let setup = this.$root.world.group[this.entityName].templateInfo;
@@ -251,20 +254,53 @@ export default {
       let newList = {};
 
       Object.keys(list).forEach(key => {
+        console.log("KEY 1", key);
         if(!newList[key]) newList[key] = {};
 
         for (let property in setup) {
           let flist = setup[property].referenceList;
-          if(setup[property].isList){
+
+          if(setup[property].isList == 'all'){
+            newList[key][property] = {};
+            if(flist){
+              Object.keys(flist).forEach(key2 => {
+                let rename = flist[key2].name;
+                if(!list[key][property]) list[key][property] = {};
+                if(list[key][property][rename]){
+                  newList[key][property][rename] = list[key][property][rename];
+                }
+                newList[key][property][rename] = this.reformatEntity(list[key][property][rename], property);
+              });
+            }
+          }
+
+          else if(setup[property].isList == 'select'){
+            if(flist){
+            newList[key][property] = {};
+            Object.keys(flist).some(key2 => {
+              let rename = flist[key2].name;
+              if(list[key][property][rename]){
+                newList[key][property][rename] = list[key][property][rename];
+                return true;
+              }
+            });
+            }
+          }
+
+          else if(setup[property].isList == 'multiselect'){
+            if(flist){
+            newList[key][property] = {};
             newList[key][property] = {};
             Object.keys(flist).forEach(key2 => {
               let rename = flist[key2].name;
               if(list[key][property][rename]){
                 newList[key][property][rename] = list[key][property][rename];
               }
-              newList[key][property][rename] = this.reformatEntity(list[key][property][rename], property);
             });
+            }
+
           }
+
           else{
             newList[key][property] = this.reformatEntity(list[key][[property]], property);
           }
@@ -284,7 +320,7 @@ export default {
       else if(fixProp == 'number' && varType != 'number'){
         newEntity = 0;
       }
-      else if(fixProp == 'scriptList' && !Array.isArray(entity)){
+      else if(fixProp == 'script_list' && !Array.isArray(entity)){
         newEntity = [];
       }
       else if(fixProp == 'currentAndMax' && varType != 'object'){

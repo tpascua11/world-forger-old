@@ -1,11 +1,17 @@
 <template>
   <div class="home">
+
+    <div style="height: 30px; background-color: #f2f2f2; display: flex; justify-content: flex-start; align-items: center;">
+      <h1 @click="changeMode" style="font-size: 30px; font-weight: bold; color: #333; margin-left: 16px;">{{entityNameSelect}}</h1>
+    </div>
+
     <NewTableName v-if="newTableView"/>
 
     <Entity
       v-bind:entity="entityNameSelect"
       v-bind:title="entityNameSelect"
       v-bind:groupEntity="entityNameSelect"
+      v-bind:entityMode="entityMode"
       v-if="entityTableView"/>
 
     <div class="fixedBottom">
@@ -43,10 +49,16 @@ export default {
       newTableView: true,
       entityTableView: false,
       entityNameSelect: '',
+      entityMode: 'ENTITY_CONFIGURE'
 		};
 	},
   setup() {},
   methods:{
+    changeMode(){
+      console.log("CHANGE MODW!");
+      if(this.entityMode == 'ENTITY_CONFIGURE') this.entityMode = 'ENTITY_LIST';
+      else this.entityMode = 'ENTITY_CONFIGURE';
+    },
     addEntity(){},
     selectEntityTable(entityName){
 			this.$root.selectedEntityTableName = entityName;
@@ -105,8 +117,6 @@ export default {
         background-color: #666;
         color: #fff;
       }
-
-
 </style>
 
 <style>

@@ -1,16 +1,13 @@
 <template>
   <div class="container">
-    <section class="">
-      <div v-if="title" class="border-down-x3" style="height: 30px;">
-        <div class="pure-u-4-24">
-          <i class="ra  ra-book   ra-lg"
-            style="position: relative; top: 5px; left: 2px;
-                   font-size: 24px;"></i>
-          </div>
-          <div class="pure-u-16-24 this-title left" @click="titleClick">
-            {{title}}
-        </div>
-      </div>
+		<section class="">
+			<!--
+			<div v-if="title" class="" style="height: 40px;">
+				<button v-on:click="addNewRow();" class="pure-button full-width">
+					Format
+				</button>
+			</div>
+			-->
 
       <div id="the-list" class="cool-scroll" v-bind:style="{height: box_height}">
 				<div v-for="(row, index) in map" :key="index"
