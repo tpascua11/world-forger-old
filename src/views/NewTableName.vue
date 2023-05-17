@@ -3,11 +3,12 @@
     <div class="container">
       <div class="center">
         {{tableName}}
-      <img src="" alt="Your Image" class="image">
-      <input type="text" v-model="inputText" placeholder="New Enttiy" class="input-field">
-      <button @click="addEntity()" class="confirm-button">Confirm</button>
+        <img src="" alt="Your Image" class="image">
+        <input type="text" v-model="inputText" placeholder="New Enttiy" class="input-field">
+        <button @click="addEntity()" class="confirm-button">Confirm</button>
+        <hr>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -15,6 +16,8 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import Select from "@/components/Select.vue";
 import { useWorldStore } from "@/stores/world";
+import WorldSave from "@/components/WorldLoadAndSave.vue";
+import WorldLoad from "@/components/WorldLoad.vue";
 
 export default {
   name: "HomeView",
@@ -28,6 +31,8 @@ export default {
   components: {
     HelloWorld,
     Select,
+    WorldSave,
+    WorldLoad,
   },
 	data: function() {
     return {

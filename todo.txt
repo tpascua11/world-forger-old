@@ -1,0 +1,19 @@
+--- Must Need Stuff ---
+
+-For Script List, Need to target Entity and their list
+Entity Rows better show to see Nested Select Options
+Nested Select and Multiselect
+
+Make a view/button to save the data as a json
+Save it to localstorage,
+Have a reset data button (new entity set)
+
+Make A Better Way to see Rows of Entity
+
+
+--- Graphical Needs_---
+Entity Title Click to show Entity Option Editor
+
+Entity Option Editor, Reference Focus select all option
+
+Remake the Entity Option Editor to look better to edit

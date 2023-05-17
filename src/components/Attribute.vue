@@ -175,15 +175,15 @@ export default {
     return {
       character: {},
       attributes: {name: {name: 'name', dataType: 'string', dataFormat: 'string'}},
-      setup: {dataType: 'list', referenceTo: '', dataFormat: 'currentAndMax',
+      setup: {dataType: 'list', referenceTo: '', dataFormat: 'current_and_max',
         isList: false, data: [], referenceList: []},
       newAttribute: '',
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
-      dataTypeOption: [ 'number', 'string','currentAndMax'
+      dataTypeOption: [ 'number', 'string','current_and_max'
                        ,'boolean', 'script_list'],
       listOption: ['all', 'select', 'multiselect'],
-      dataFormatOption: ['default', 'currentAndMax'],
+      dataFormatOption: ['default', 'current_and_max'],
       referenceGroup: Object.keys(this.$root.world.group),
       options: [
         { name: 'Vue.js', language: 'JavaScript' },
@@ -232,7 +232,7 @@ export default {
         newTemplateInfo[key] = {
           type: tmp.dataType || '',
           ref: tmp.referenceTo || '',
-          value_option: tmp.dataType == 'currentAndMax' ? {'max': '#', 'current': '#'} : null,
+          value_option: tmp.dataType == 'current_and_max' ? {'max': '#', 'current': '#'} : null,
           isList: tmp.isList,
           referenceList: tmp.referenceList,
         };
@@ -323,7 +323,7 @@ export default {
       else if(fixProp == 'script_list' && !Array.isArray(entity)){
         newEntity = [];
       }
-      else if(fixProp == 'currentAndMax' && varType != 'object'){
+      else if(fixProp == 'current_and_max' && varType != 'object'){
         newEntity = {current: 0, max: 0};
       }
       else{

@@ -2,7 +2,11 @@
   <div class="home">
 
     <div style="height: 30px; background-color: #f2f2f2; display: flex; justify-content: flex-start; align-items: center;">
+      <!--
       <h1 @click="changeMode" style="font-size: 30px; font-weight: bold; color: #333; margin-left: 16px;">{{entityNameSelect}}</h1>
+      -->
+      <WorldSave />
+      <WorldLoad @json-loaded="processJsonData"/>
     </div>
 
     <NewTableName v-if="newTableView"/>
@@ -15,12 +19,14 @@
       v-if="entityTableView"/>
 
     <div class="fixedBottom">
+
       <ul>
         <li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
           {{ navItem }}
         </li>
       </ul>
     </div>
+
 
   </div>
 </template>
@@ -29,6 +35,8 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import Entity from "@/views/Entity.vue";
 import Select from "@/components/Select.vue";
+import WorldSave from "@/components/WorldLoadAndSave.vue";
+import WorldLoad from "@/components/WorldLoad.vue";
 
 
 import { useWorldStore } from "@/stores/world";
@@ -42,6 +50,8 @@ export default {
     Select,
     NewTableName,
     Entity,
+    WorldSave,
+    WorldLoad,
   },
 	data: function() {
     return {
@@ -49,7 +59,8 @@ export default {
       newTableView: true,
       entityTableView: false,
       entityNameSelect: '',
-      entityMode: 'ENTITY_CONFIGURE'
+      entityMode: 'ENTITY_CONFIGURE',
+      buildWorld: false,
 		};
 	},
   setup() {},
@@ -67,7 +78,11 @@ export default {
       this.entityTableView = true;
       this.entityNameSelect = entityName;
       //this.$forceUpdate();
-		}
+    },
+    processJsonData(jsonData) {
+      // Handle the loaded jsonData here
+      console.log("PROCESSING JSON!", jsonData);
+    }
   },
   mounted(){
     this.entityGroup = this.$root.world.group;

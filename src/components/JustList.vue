@@ -1,13 +1,9 @@
 <template>
   <div class="container">
 		<section class="">
-			<!--
-			<div v-if="title" class="" style="height: 40px;">
-				<button v-on:click="addNewRow();" class="pure-button full-width">
-					Format
-				</button>
+			<div v-on:click="test" v-if="title" class="border-down-x2" style="font-size: 20px; font-weight: bold; color: #333;">
+				{{title}}
 			</div>
-			-->
 
       <div id="the-list" class="cool-scroll" v-bind:style="{height: box_height}">
 				<div v-for="(row, index) in map" :key="index"
@@ -59,7 +55,11 @@ export default {
   },
   mounted(){
   },
-  methods:{
+	methods:{
+		test(){
+			console.log("TEST!");
+			this.$emit('entitySetting');
+		},
     nameFormat: function(name){
       let newStr = name.replace(/_/g, " ");
       let nameX = newStr.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
@@ -104,8 +104,8 @@ export default {
 						let name = this.templateInfo[key].referenceList[key2].name;
 						if(this.templateInfo[key].type == 'number' ) newEntity[key][name] = 0;
 						else if(this.templateInfo[key].type == 'string' ) newEntity[key][name] = '';
-						else if(this.templateInfo[key].type == 'currentAndMax' ) newEntity[key][name] = {current: 0, max: 0};
-						//else if(this.templateInfo[key].type == 'currentAndMax' ) newEntity[key] = {'hp': {current: 0, max: 10}};
+						else if(this.templateInfo[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+						//else if(this.templateInfo[key].type == 'current_and_max' ) newEntity[key] = {'hp': {current: 0, max: 10}};
 						//:wconsole.log("TEST!?", newEntity[key]);
 					});
 				}

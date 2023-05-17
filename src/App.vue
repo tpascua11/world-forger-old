@@ -43,7 +43,7 @@ export default {
 			this.world.name = name;
 		},
 		saveToLocalStorage(){
-			localStorage.setItem('currentWorld', JSON.stringify(this.world));
+			localStorage.setItem('World', JSON.stringify(this.world));
 		},
 		allEntityList(){
 			//let groupName = Object.keys(this.group);
@@ -57,12 +57,16 @@ export default {
 		}
 	},
 	mounted() {
-		/*
-		let storedWorld = localStorage.getItem('currentWorld');
+		let storedWorld = localStorage.getItem('World');
 		console.log("lets see stored world", JSON.parse(storedWorld));
-		this.world = JSON.parse(storedWorld);
-		 */
+		let jsonWorld = JSON.parse(storedWorld);
 
+		if(jsonWorld){
+			//this.$root.world = this.world;
+			this.world = jsonWorld;
+		}
+
+		//this.world
 		this.$root.world = this.world;
 		//this.$root.group = this.group;
 

@@ -1,16 +1,15 @@
 <template>
-  <div class="areaList card" style="width: 10rem;">
-    <div class="card-body">
-      <button class="btn-success btn-small btn-block">
-        <vue-blob-json-csv
-          file-type="json"
-          file-name="todos"
-          :data=[world]
-        >
-          Download JSON
-        </vue-blob-json-csv>
+  <div style="margin-left: 10px;">
+    <!--<input type="text" id="nameInput" v-model="name">-->
+      <button @click="downloadJson()" class="btn-success btn-small btn-block">
+        Save World
       </button>
-    </div>
+      <button @click="saveLocalStorage()" class="btn-success btn-small btn-block">
+        Local Storage Save
+      </button>
+      <button @click="downloadJson()" class="btn-success btn-small btn-block">
+        Reset
+      </button>
   </div>
 </template>
 
@@ -21,13 +20,32 @@ export default {
     return {}
   },
   props: {
-   name: String,
     world: Object,
   },
   mounted(){
     console.log("SEE THE AreaList", this.areaList);
   },
   methods:{
+    downloadJson() {
+      if(!this.name) this.name = 'World';
+      const jsonDataString = JSON.stringify(this.$root.world);
+      const blob = new Blob([jsonDataString], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = this.name;
+      link.click();
+    },
+    saveLocalStorage() {
+      if(!this.name) this.name = 'World';
+			const serializedObject = JSON.stringify(this.$root.world);
+      localStorage.setItem(this.name, serializedObject);
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        console.log("KEY", key);
+        const value = localStorage.getItem(key);
+        //console.log(`${key}: ${value}`);
+      }
+		}
   },
   computed: {
     classObject: function () {

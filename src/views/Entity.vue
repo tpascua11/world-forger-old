@@ -4,8 +4,7 @@
     </div>
 
     <!-- Entity List Selector -->
-    <div class="pure-u-3-24" style="max-height='50vh'">
-
+    <div class="pure-u-4-24" style="max-height='50vh'">
       <JustList
         v-model="selectedEntity"
         v-bind:map="thisMapList"
@@ -15,14 +14,12 @@
         v-bind:templateInfo="thisMap.templateInfo"
         @selected="refreshArea"
         @created="refreshInteractionList"
+        @entitySetting="selectAttribute"
         @titleClick="showEntityTemplate"
         v-bind:refresh="refresh"
       />
     </div>
 
-    <div class="pure-u-1-24" >
-
-    </div>
 
     <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-18-24">
       <Attribute
@@ -128,7 +125,8 @@
                               v-model="selectedEntity[index][index2]" type="number" style=" height: 25px; width: 50%;" />
                           </label>
                         </div>
-                        <div v-else-if="(templateInfo[index].type == 'currentAndMax')">
+                        <div v-else-if="(templateInfo[index].type ==
+                          'current_and_max')">
                           <label>
                             Current: <input class="borderless-gray" placeholder="name..."
                               v-model="selectedEntity[index][index2].current" type="number"
@@ -165,7 +163,8 @@
                           v-model="selectedEntity[index]" type="number" style=" height: 25px; width: 50%;" />
                       </label>
                     </div>
-                    <div v-else-if="(templateInfo[index].type == 'currentAndMax')">
+                    <div v-else-if="(templateInfo[index].type ==
+                      'current_and_max')">
                       <label>
                         Current: <input class="borderless-gray" placeholder="name..."
                           v-model="selectedEntity[index].current" type="number"
@@ -317,7 +316,9 @@ export default {
       this.showView = "ENTITY_EDIT";
     },
     selectAttribute: function(){
+      console.log("ATTRIBUTE");
       this.showOption = 'ATTRIBUTE';
+      this.showView = "ENTITY_TEMPLATE";
     },
     selectScriptListName: function(scriptListName){
       this.listName = scriptListName;
@@ -379,7 +380,7 @@ export default {
       console.log("WHAT IS LIST", list);
       if(type == 'string') list.push('');
       else if(type == 'number') list.push(0);
-      else if(type == 'currentAndMax') list.push({current: 0, max: 0});
+      else if(type == 'current_and_max') list.push({current: 0, max: 0});
     },
   },
   mounted(){
