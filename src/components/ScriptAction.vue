@@ -72,8 +72,9 @@
       <ToggleWorldFlag  :value="value"/>
       <ToggleScriptFlag :value="value"/>
       <MoveIndex        :value="value"/>
-      <ModifierItem     :value="value"/>
+      <!--<ModifierItem     :value="value"/>-->
       <ModifierStat     :value="value"/>
+      <ModifierEntity   :value="value"/>
       <ModifierStatWithInfluence :value="value"/>
       <Time :value="value"/>
       <MoveToArea :value="value"/>
@@ -129,6 +130,8 @@ import ModifierStat from '@/components/scriptModifier/Stat.vue'
 import ModifierStatWithInfluence from '@/components/scriptModifier/StatWithInfluence.vue'
 import Time from '@/components/scriptModifier/Time.vue'
 
+import ModifierEntity from '@/components/scriptModifier/EntityModifier.vue'
+
 import ChoiceList from '@/components/scriptModifier/Choice.vue'
 
 import FlagChanceOnStat from '@/components/scriptCondition/FlagChanceOnStat.vue'
@@ -162,6 +165,7 @@ export default {
     MoveIndex,
 
     MoveToArea,
+    ModifierEntity,
     ModifierItem,
     ModifierStat,
     ModifierStatWithInfluence,
@@ -175,6 +179,7 @@ export default {
     FlagChanceOnStat,
     ItemFlag,
     TimeFlag,
+
   },
   mounted(){
   },
@@ -292,7 +297,7 @@ export default {
 		},
     classObject: function () {
       return { active: this.isActive && !this.error, 'text-danger': this.error && this.error.type === 'fatal'}
-    }
+    },
   }
 }
 
