@@ -112,7 +112,7 @@ export default {
 			console.log("CHECK", index);
 			console.log("SELECTING ACTION", row);
       this.validScriptList();
-      this.$emit('selectAction', row);
+      this.$emit('selectAction', row, index);
     },
     deselectAction(){
 			this.value = {empty: true};

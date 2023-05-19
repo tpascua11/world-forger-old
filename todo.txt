@@ -11,6 +11,10 @@ Have a reset data button (new entity set)
 Make A Better Way to see Rows of Entity
 
 
+Script Event
+Make a way to store a value for entity
+Then use value for the entity
+
 --- Graphical Needs_---
 Entity Title Click to show Entity Option Editor
 

@@ -1,5 +1,5 @@
 <template>
-  <section v-if="(value.eventName == 'item_modifier')">
+  <section v-if="(value.eventName == 'entity_modifier')">
     <div class="script-select-title border-down">
       <i class="ra ra-ship-emblem ra-1x"></i>
       Entity Modifier
@@ -7,8 +7,9 @@
     <br>
     <div>
       <div class="pure-u-3-3">
+        Group
         <VueMultiselect
-          v-model="chosenEntity"
+          v-model="value.entityGroup"
           tag-placeholder="..."
           :options="seeEntityGroup"
           placeholder="Chosen Entity"
@@ -21,7 +22,8 @@
       </div>
       <br>
       <div class="pure-u-3-3">
-        <SelectNameAndID :value="value" :list="flagKey"/>
+        Entity
+        <SelectNameAndIdByGroup :value="value" :list="flagKey" :group="value.entityGroup"/>
       </div>
       <br>
       <div class="pure-u-3-3">
@@ -33,7 +35,8 @@
         <div v-if="value.amount < 0"> Remove {{value.amount}} {{value.name}}</div>
       </div>
       <p>
-        Add or Subtract a selected amount of selected item.
+        Add or Subtract a selected amount of selected item of selected Entity
+        Group
       </p>
     </div>
       <br>
@@ -43,6 +46,15 @@
 <script>
 export default {
   name: 'Basic',
+  watch: {
+    /*
+    value: function(oldE, newE){
+      if(oldE.chosenEntity != newE.chosenEntity){
+        this.chosenEntity = newE.chosenEntity;
+      }
+    }
+     */
+  },
   data: function(){
     return {
       selected: null,
@@ -59,6 +71,20 @@ export default {
       this.selected = this.value.id;
     }
     this.entityGroup = this.$root.world.group;
+    console.log("MOUNTED VALUE", this.value);
+    if(this.value.entityGroup){
+      this.chosenEntity = this.value.entityGroup;
+    }
+  },
+  refresh(){
+    if(this.value && this.value.id){
+      this.selected = this.value.id;
+    }
+    this.entityGroup = this.$root.world.group;
+    console.log("MOUNTED VALUE", this.value);
+    if(this.value.entityGroup){
+      this.chosenEntity = this.value.entityGroup;
+    }
   },
   methods:{
     test(){},
@@ -80,6 +106,7 @@ export default {
     },
     newEntityList(){
       console.log("NEW");
+      this.chosenEntity = this.value.entityGroup;
       this.flagList = Object.keys(this.$root.world.group[this.chosenEntity].list);
       this.flagKey = this.$root.world.group[this.chosenEntity].list;
       this.value.entityGroup = this.chosenEntity;
@@ -93,7 +120,11 @@ export default {
     },
 		seeEntityGroup(){
 			return Object.keys(this.entityGroup);
-		},
+    },
+    entityList(){
+      if(this.chosenEntity) return this.objectListToList(this.$root.world.group[this.chosenEntity].list);
+      else return [];
+    },
   }
 }
 

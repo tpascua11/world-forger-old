@@ -17,9 +17,8 @@
 					<div class="class-u-1-1 margin2">
 						<div class="pure-u-1-2">
 							<button class="pure-button action-button" v-on:click="newDescription()"       >  <h4> Description    </h4> </button>
-							<button class="pure-button action-button" v-on:click="newStat()"              >  <h4> Stat           </h4> </button>
 							<button class="pure-button action-button" v-on:click="newStatWithInfluence()" >  <h4> Stat Influence </h4> </button>
-							<button class="pure-button action-button" v-on:click="newItem()"              >  <h4> Item           </h4> </button>
+							<button class="pure-button action-button" v-on:click="newEntity()"            >  <h4> Entity</h4> </button>
 							<button class="pure-button action-button" v-on:click="newTime()"              >  <h4> Time           </h4> </button>
 							<button class="pure-button action-button" v-on:click="newMove()"              >  <h4> Move           </h4> </button>
 							<button class="pure-button action-button" v-on:click="toggleWorldFlag()"      >  <h4> Toggle Flag    </h4> </button>
@@ -223,6 +222,10 @@ export default {
     },
     newItem(){
 			let template = {eventName: "item_modifier",  name: '', amount: 0};
+			this.refScriptList.push(template);
+    },
+    newEntity(){
+			let template = {eventName: "entity_modifier",  name: '', amount: 0};
 			this.refScriptList.push(template);
     },
     newStat(){

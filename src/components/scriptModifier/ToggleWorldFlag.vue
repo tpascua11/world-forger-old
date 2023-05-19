@@ -3,7 +3,7 @@
     v-if="    (value.eventName == 'toggle_world_flag')
            || (value.eventName == 'toggle_flag')"
     class="">
-    <div class="row script-select-title">
+    <div class="script-select-title">
 				<i class="ra ra-round-shield ra-1x"></i>
         World Flag
     </div>

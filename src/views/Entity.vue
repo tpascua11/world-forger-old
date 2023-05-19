@@ -328,8 +328,9 @@ export default {
     selectCondition: function(){
       this.showOption = 'CONDITION';
     },
-    selectAction(data){
+    selectAction(data, index){
       console.log("Select Action", data);
+      console.log("Index", index);
       this.selectedAction = data;
     },
     deselectAction(){
