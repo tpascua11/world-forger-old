@@ -1,5 +1,5 @@
 <template>
-	<div class="dt-border-x2">
+	<div class="">
 		<div v-if="typeof refScriptList !== 'undefined'">
 			<!-- Main -->
 			<section class="">

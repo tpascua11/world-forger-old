@@ -27,7 +27,7 @@
       />
     </div>
 
-    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-12-24 dt-border-x2">
+    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-12-24">
       <div v-if="!selectedEntity.empty">
         <div class="row border-down-x3 margin1" style="min-height: 40px;">
           <div class="d-font-x2-b">
@@ -53,7 +53,7 @@
                   <input
                     class="borderless-gray" placeholder="name..."
                     v-model="selectedEntity.name"
-                    type="text" style="font-weight: 900; font-size: 25px; height: 25px; width: 100%;"
+                    type="text" style="font-weight: 900; font-size: 20px; height: 25px; width: 100%;"
                   />
                 </label>
               </div>
@@ -184,7 +184,6 @@
         <div v-else-if="showOption == 'CONDITION'" class="">
         </div>
         <div v-else-if="showOption == 'SCRIPT_LIST'" class="">
-          {{selectedEntity}}
           <ScriptList
             v-bind:scriptList="selectedEntity[listName]"
             v-bind:entity="selectedEntity"
@@ -221,32 +220,21 @@
 
 <script>
 
-import ScriptList from '@/components/ScriptList.vue'
-import Attribute from '@/components/Attribute.vue'
-
-import ScriptAction from '@/components/ScriptAction.vue'
-import Condition from '@/components/Condition.vue'
-
-import StatList from '@/components/attribute/ListCurrentAndMax.vue'
-
-
-import ListMultiSelect from '@/components/attribute/ListMultiSelect.vue'
-
-import ListAmount from '@/components/attribute/ListWithAmount.vue'
-import ListCustom from '@/components/attribute/ListCustom.vue'
-import JustList from '@/components/JustList.vue'
+import StatList from   '@/components/attribute/Stat_List.vue';
+import ScriptList from '@/components/ScriptList.vue';
+import Attribute from '@/components/Attribute.vue';
+import ScriptAction from '@/components/ScriptAction.vue';
+import Condition from '@/components/Condition.vue';
+import JustList from '@/components/JustList.vue';
 
 
 export default {
   name: 'Character',
   components: {
+    StatList,
     Attribute,
     ScriptList,
     ScriptAction,
-    StatList,
-    ListMultiSelect,
-    ListAmount,
-    ListCustom,
     JustList,
     Condition,
   },

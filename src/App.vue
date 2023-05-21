@@ -12,7 +12,7 @@
 		<ul>
 
 				<li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
-					{{ navItem }} will
+					{{ navItem }}
 				</li>
 			</ul>
 

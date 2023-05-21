@@ -2,7 +2,6 @@
   <div class="home">
     <div class="container">
       <div class="center">
-        {{tableName}}
         <img src="" alt="Your Image" class="image">
         <input type="text" v-model="inputText" placeholder="New Enttiy" class="input-field">
         <button @click="addEntity()" class="confirm-button">Confirm</button>
@@ -13,7 +12,6 @@
 </template>
 
 <script>
-import Select from "@/components/Select.vue";
 import { useWorldStore } from "@/stores/world";
 import WorldSave from "@/components/WorldLoadAndSave.vue";
 import WorldLoad from "@/components/WorldLoad.vue";
@@ -28,7 +26,6 @@ export default {
     }
   },
   components: {
-    Select,
     WorldSave,
     WorldLoad,
   },

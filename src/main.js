@@ -57,6 +57,3 @@ app.mixin({
     },
   },
 });
-
-// eslint-disable-next-line
-//

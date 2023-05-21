@@ -19,7 +19,6 @@
 <script>
 // eslint-disable-next-line
 import { useWorldStore } from "@/stores/world";
-import Select from "@/components/Select.vue";
 import JustList from "@/components/JustList.vue";
 import {World} from '@/data/world.js';
 
@@ -40,7 +39,6 @@ export default {
     };
   },
   components: {
-		Select,
   },
   methods: {
     test() {

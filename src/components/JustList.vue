@@ -1,8 +1,10 @@
 <template>
   <div class="container">
 		<section class="">
-			<div v-on:click="test" v-if="title" class="border-down-x2" style="font-size: 20px; font-weight: bold; color: #333;">
-				{{title}}
+			<div v-on:click="test" v-if="title" class="border-down-x2" style="height: 40px; font-size: 25px; ;font-weight: bold; color: #333;">
+				<div style="position: relative; top: 10px;">
+					{{nameCap(title)}}
+				</div>
 			</div>
 
       <div id="the-list" class="cool-scroll" v-bind:style="{height: box_height}">

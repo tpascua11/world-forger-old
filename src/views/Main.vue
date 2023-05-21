@@ -19,8 +19,10 @@
       v-if="entityTableView"/>
 
     <div class="fixedBottom">
-
       <ul>
+        <li @click="test()">
+          New...
+        </li>
         <li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
           {{ navItem }}
         </li>
@@ -33,7 +35,6 @@
 
 <script>
 import Entity from "@/views/Entity.vue";
-import Select from "@/components/Select.vue";
 import WorldSave from "@/components/WorldLoadAndSave.vue";
 import WorldLoad from "@/components/WorldLoad.vue";
 
@@ -45,7 +46,6 @@ export default {
   name: "mainview",
   watch: {},
   components: {
-    Select,
     NewTableName,
     Entity,
     WorldSave,
@@ -63,6 +63,11 @@ export default {
 	},
   setup() {},
   methods:{
+    test(){
+      console.log("TEST");
+      this.newTableView = true;
+      this.entityTableView = false;
+    },
     changeMode(){
       console.log("CHANGE MODW!");
       if(this.entityMode == 'ENTITY_CONFIGURE') this.entityMode = 'ENTITY_LIST';
