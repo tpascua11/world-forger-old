@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
 import Select from "@/components/Select.vue";
 import { useWorldStore } from "@/stores/world";
 import WorldSave from "@/components/WorldLoadAndSave.vue";
@@ -29,7 +28,6 @@ export default {
     }
   },
   components: {
-    HelloWorld,
     Select,
     WorldSave,
     WorldLoad,

@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
 import Select from "@/components/Select.vue";
 import { useWorldStore } from "@/stores/world";
 
@@ -26,7 +25,6 @@ export default {
     }
   },
   components: {
-    HelloWorld,
     Select,
   },
 	data: function() {

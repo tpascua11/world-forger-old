@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
 import Entity from "@/views/Entity.vue";
 import Select from "@/components/Select.vue";
 import WorldSave from "@/components/WorldLoadAndSave.vue";
@@ -46,7 +45,6 @@ export default {
   name: "mainview",
   watch: {},
   components: {
-    HelloWorld,
     Select,
     NewTableName,
     Entity,
