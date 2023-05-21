@@ -1,12 +1,10 @@
 <template>
 	<section v-if="(value.eventName == 'stat_modifier_formula_1')" class="">
 		<div class="row script-select-title">
-			<i class="ra ra-player-lift ra-1x">
-			</i>
 			Formula Stat Modifier
 		</div>
 		<br>
-		<div class="row">
+		<div>
 			Modifier Stat
 			<SelectSpecific :value="value" :list="flagKey"
 				:option_to_value="[
@@ -18,7 +16,6 @@
 		<br>
 		<div>
 			Influence By
-
 			<SelectSpecific :value="value" :list="flagKey"
 				:option_to_value="[
 				['id','influence_stat_id'],

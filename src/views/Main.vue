@@ -91,7 +91,7 @@ export default {
   computed: {
     tableName(){},
 		seeEntityGroup(){
-			return Object.keys(this.entityGroup);
+			return Object.keys(this.$root.world.group);
 		},
   }
 };

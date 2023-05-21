@@ -1,6 +1,6 @@
 <template>
 	<div>
-	<nav>
+		<nav>
 		<!--
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
@@ -9,14 +9,13 @@
 		-->
 	</nav>
 	<div class="fixedBottom">
-		<!--
 		<ul>
+
 				<li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
-					{{ navItem }}
+					{{ navItem }} will
 				</li>
 			</ul>
 
-		-->
 		</div>
 	</div>
   <router-view />

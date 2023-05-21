@@ -7,7 +7,7 @@
       <button @click="saveLocalStorage()" class="btn-success btn-small btn-block">
         Local Storage Save
       </button>
-      <button @click="downloadJson()" class="btn-success btn-small btn-block">
+      <button @click="superReset()" class="btn-success btn-small btn-block">
         Reset
       </button>
   </div>
@@ -45,7 +45,13 @@ export default {
         const value = localStorage.getItem(key);
         //console.log(`${key}: ${value}`);
       }
-		}
+		},
+    superReset() {
+      if(confirm("RESET WORLD!")){
+        this.$root.world.group = {};
+        //this.$forceUpdate();
+      }
+    }
   },
   computed: {
     classObject: function () {

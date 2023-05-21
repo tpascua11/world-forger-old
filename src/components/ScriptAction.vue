@@ -18,10 +18,10 @@
 						<div class="pure-u-1-2">
 							<button class="pure-button action-button" v-on:click="newDescription()"       >  <h4> Description    </h4> </button>
 							<button class="pure-button action-button" v-on:click="newStatWithInfluence()" >  <h4> Stat Influence </h4> </button>
-							<button class="pure-button action-button" v-on:click="newEntity()"            >  <h4> Entity</h4> </button>
+              <button class="pure-button action-button" v-on:click="newEntity()"            >  <h4> Mod Entity</h4> </button>
 							<button class="pure-button action-button" v-on:click="newTime()"              >  <h4> Time           </h4> </button>
-							<button class="pure-button action-button" v-on:click="newMove()"              >  <h4> Move           </h4> </button>
-							<button class="pure-button action-button" v-on:click="toggleWorldFlag()"      >  <h4> Toggle Flag    </h4> </button>
+              <button class="pure-button action-button" v-on:click="newMove()"              >  <h4> Move           </h4> </button>
+							<button class="pure-button action-button" v-on:click="newFlag()"              >  <h4> Flag Entity </h4> </button>
 							<button class="pure-button action-button" v-on:click="toggleScriptFlag()"     >  <h4> Script Flag    </h4> </button>
 							<button class="pure-button action-button" v-on:click="newMoveIndex()"         >  <h4> Set Index At   </h4> </button>
 							<button class="pure-button action-button" v-on:click="newChoiceList()"        >  <h4> Choice List    </h4> </button>
@@ -52,7 +52,6 @@
         <button v-on:click="showModal('ItemFlag')"  				class="pure-button action-button-p "> <h4> Item Flags 	</h4>	</button>
         <button v-on:click="showModal('WorldFlag')" 				class="pure-button action-button-p "> <h4> World Flags 	</h4>	</button>
         <button v-on:click="showModal('ScriptFlag')" 				class="pure-button action-button-p "> <h4> Script Flags </h4>	</button>
-				<button v-on:click="showModal('TimeFlag')" 					class="pure-button action-button-p "> <h4> Time Flags 	</h4>	</button>
 			</div>
       <div class="pure-u-1-2">
         <button v-on:click="addIf()" 												class="pure-button action-button-p "> <h4>    	IF      </h4>	</button>
@@ -66,18 +65,20 @@
     </section>
     <!-- Back -->
     <!-- Script Imports Additions -->
-    <section class="margin2">
-      <Description      :value="value"/>
-      <ToggleWorldFlag  :value="value"/>
-      <ToggleScriptFlag :value="value"/>
-      <MoveIndex        :value="value"/>
-      <!--<ModifierItem     :value="value"/>-->
-      <ModifierStat     :value="value"/>
+		<section class="margin2">
+			<Description      :value="value"/>
+			<ToggleScriptFlag :value="value"/>
+			<MoveIndex        :value="value"/>
       <ModifierEntity   :value="value"/>
+			<ModifierFlag     :value="value"/>
+			<Time :value="value"/>
+			<ChoiceList :value="value"/>
+			<!--
+			<MoveToArea :value="value"/>
+      <ModifierStat     :value="value"/>
+			<ToggleWorldFlag  :value="value"/>
       <ModifierStatWithInfluence :value="value"/>
-      <Time :value="value"/>
-      <MoveToArea :value="value"/>
-      <ChoiceList :value="value"/>
+			-->
 		</section>
 
 		<div class="margin2" v-if="!value.empty">
@@ -130,6 +131,7 @@ import ModifierStatWithInfluence from '@/components/scriptModifier/StatWithInflu
 import Time from '@/components/scriptModifier/Time.vue'
 
 import ModifierEntity from '@/components/scriptModifier/EntityModifier.vue'
+import ModifierFlag from '@/components/scriptModifier/EntityFlag.vue'
 
 import ChoiceList from '@/components/scriptModifier/Choice.vue'
 
@@ -165,6 +167,7 @@ export default {
 
     MoveToArea,
     ModifierEntity,
+    ModifierFlag,
     ModifierItem,
     ModifierStat,
     ModifierStatWithInfluence,
@@ -226,6 +229,10 @@ export default {
     },
     newEntity(){
 			let template = {eventName: "entity_modifier",  name: '', amount: 0};
+			this.refScriptList.push(template);
+    },
+    newFlag(){
+			let template = {eventName: "entity_flag",  name: '', amount: 0};
 			this.refScriptList.push(template);
     },
     newStat(){

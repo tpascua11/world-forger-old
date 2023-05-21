@@ -1,5 +1,5 @@
 <template>
-  <section v-if="(value.eventName == 'entity_modifier')">
+  <section v-if="(value.eventName == 'entity_flag')">
     <div class="script-select-title border-down">
       <i class="ra ra-ship-emblem ra-1x"></i>
       Entity Modifier
@@ -27,12 +27,23 @@
       </div>
       <br>
       <div class="pure-u-3-3">
-        Modifier <input class="" style="width: 96%" type="string" v-model="value.amount" placeholder="..."> 
-      </div>
-      <div class="pure-u-3-3">
-        <br>
-        <div v-if="value.amount > 0"> Add {{value.amount}} {{value.name}}</div>
-        <div v-if="value.amount < 0"> Remove {{value.amount}} {{value.name}}</div>
+        <div class="">
+          <div class="col col-12">
+            <button v-on:click="toggleFlag()"
+              v-if="value.flag"
+              class="pure-button full-width button-green"
+            >
+              <section class="smalltin"> True </section>
+            </button>
+
+            <button v-on:click="toggleFlag()"
+              v-if="!value.flag"
+              class="pure-button full-width button-red"
+            >
+              <section class="smalltin"> False </section>
+            </button>
+          </div>
+        </div>
       </div>
       <p>
         Add or Subtract a selected amount of selected item of selected Entity
@@ -59,7 +70,8 @@ export default {
     return {
       selected: null,
       //flagList: Object.keys(this.$root.world.group.item.list),
-      flagKey : [], //this.$root.world.group.item.list,
+      flagKey : [],
+      //this.$root.world.group.item.list,
       listWithKeys: this.objectListToList(this.flagKey),
       entityGroup: [],
       chosenEntity: '',
@@ -180,6 +192,16 @@ export default {
     margin-top: -50px;
     /*margin-bottom: 10px;*/
   }
+
+  .button-green{
+    background-color: lightgreen;
+  }
+
+  .button-red {
+    background-color: pink;
+  }
+
+
 
 
 

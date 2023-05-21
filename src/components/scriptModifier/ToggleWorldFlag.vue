@@ -43,7 +43,7 @@ export default {
     return {
       template: {name: '', flag: true},
       //flagList: Object.keys(this.$root.world.flagMap),
-      flagList: Object.keys(this.$root.world.group.flag.list),
+			//flagList: Object.keys(this.$root.world.group.flag.list),
       flagKey : this.$root.world.group.flag.list,
     }
   },
@@ -61,7 +61,7 @@ export default {
       console.log("test", this.$root.world.flagMap);
       //this.$root.world.flapMap[value] = this.value.flag;
       this.$root.world.flagMap[value] = false;
-      this.flagList = Object.keys(this.$root.world.flagMap);
+			//this.flagList = Object.keys(this.$root.world.flagMap);
       this.value.name = value;
     }
   },

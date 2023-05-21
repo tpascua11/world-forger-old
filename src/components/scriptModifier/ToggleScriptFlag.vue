@@ -51,7 +51,6 @@ export default {
   },
   props: ['value'],
   mounted(){
-    this.entityGroup = this.$root.world.group;
   },
   methods:{
     test(){},

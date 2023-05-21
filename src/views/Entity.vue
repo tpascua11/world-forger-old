@@ -184,6 +184,7 @@
         <div v-else-if="showOption == 'CONDITION'" class="">
         </div>
         <div v-else-if="showOption == 'SCRIPT_LIST'" class="">
+          {{selectedEntity}}
           <ScriptList
             v-bind:scriptList="selectedEntity[listName]"
             v-bind:entity="selectedEntity"
