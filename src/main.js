@@ -34,7 +34,7 @@ app.mixin({
   methods: {
     objectListToList: function (list) {
       let newList = [];
-      console.log("This List", list);
+			//console.log("This List", list);
       if(!list) return;
 
       Object.keys(list).forEach(function(row){

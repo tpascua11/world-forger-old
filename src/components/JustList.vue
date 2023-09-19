@@ -1,9 +1,10 @@
 <template>
-  <div class="container">
+  <div class="dt-border container">
 		<section class="">
-			<div v-on:click="test" v-if="title" class="border-down-x2" style="height: 40px; font-size: 25px; ;font-weight: bold; color: #333;">
-				<div style="position: relative; top: 10px;">
-					{{nameCap(title)}}
+			<div v-on:click="test" v-if="title" class="border-down-x2">
+				<div class="title-container">
+					<div class="title-name">{{nameCap(title)}}</div>
+					<div class="title-edit">Edit</div>
 				</div>
 			</div>
 
@@ -211,6 +212,39 @@ export default {
   top: 2px;
 }
 
+.title-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+	top: 8px;
+
+}
+
+.title-name:hover {
+	cursor: pointer;
+	color: blue;
+}
+
+.title-name {
+	height: 40px;
+	font-size: 25px;
+	font-weight: bold;
+	color: #333;
+}
+.title-edit {
+	font-size: 17px;
+	cursor: pointer;
+	color: black; /* You can change the color to your preferred text color */
+	text-decoration: underline; /* Optionally, underline the word */
+}
+/* Style for when the word is hovered */
+.title-edit:hover {
+	text-decoration: none; /* Remove underline on hover if not needed */
+	font-weight: bold; /* Optionally, make the text bold on hover */
+	text-decoration: underline; /* Optionally, underline the word */
+	color: blue;
+}
 
 </style>
 

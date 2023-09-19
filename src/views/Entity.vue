@@ -4,7 +4,7 @@
     </div>
 
     <!-- Entity List Selector -->
-    <div class="pure-u-4-24" style="max-height='50vh'">
+    <div class="pure-u-4-24">
       <JustList
         v-model="selectedEntity"
         v-bind:map="thisMapList"
@@ -27,7 +27,7 @@
       />
     </div>
 
-    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-12-24">
+    <div v-if="showView == 'ENTITY_EDIT'" class="pure-u-12-24 dt-border">
       <div v-if="!selectedEntity.empty">
         <div class="row border-down-x3 margin1" style="min-height: 40px;">
           <div class="d-font-x2-b">
@@ -89,7 +89,7 @@
               </span>
             </div>
         </div>
-        <section class="cool-scroll" style="height: 80vh;">
+        <section class="cool-scroll" style="height: 70vh;">
           <div class="" v-if="showOption == 'ATTRIBUTE'">
             <div v-for="(row , index) in selectedEntity" :key="index">
               <div class="pure-g" v-if="index != 'name'">
@@ -100,12 +100,13 @@
                 </div>
                 <div class="pure-u-1-24" style="">
                 </div>
+
                 <div class="pure-u-19-24" >
                     <!-- LIST COmplex-->
                     <div v-if="templateInfo[index] && templateInfo[index].isList">
                       <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
-                        <div class="pure-g">
-                          <div class="pure-u-5-24" style="">
+                        <div class="pure-g border-down">
+                          <div class="pure-u-5-24" style="margin-top: 5px;">
                             {{index2}}
                           </div>
                         <!--
@@ -138,8 +139,8 @@
                           </label>
                         </div>
                         </div>
-                        </div>
-                      </div>
+                    </div>
+                </div>
                     </div>
 
                   <!-- BASICS -->
@@ -482,6 +483,8 @@ input:focus {
 
 	/* text-align: center; */
 }
+
+
 
 
 

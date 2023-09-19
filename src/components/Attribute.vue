@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="container dt-border" style="min-height: 500px;">
+  <div class="container dt-border">
     <!-- Headers -->
     <div class="pure-g title">
       <div class="pure-u-4-24" >
@@ -19,21 +19,29 @@
         Reference Focus
       </div>
       <div class="pure-u-2-24">
+        <!--
         <button class="attribute__button" @click="setKeyPosition()">
           Reposition
         </button>
+        -->
       </div>
     </div>
-
+    <div class="dt-border"></div>
     <!-- Body -->
     <div class="body">
-
+    <br>
     <div v-for="(value, key) in attributes" :key="key">
-      <div v-if="value.name != 'name'" class="pure-g" style="z-index=2"> <!-- Base -->
+      <div v-if="value.name != 'name'" class="pure-g arow" style="z-index=2;
+        margin-bottom: 5px;"> <!-- Base -->
         <div class="pure-u-4-24" >
-          <button class="attribute__button" @click="selectProperty(key, attributes)">
+          <div class="center-container ">
+            <!--
+            <button class="attribute__button" @click="selectProperty(key, attributes)">
+              {{value.name}}
+            </button>
+            -->
             {{value.name}}
-          </button>
+          </div>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
 
@@ -41,7 +49,6 @@
         </div>
         <div class="pure-u-3-24" >
           <VueMultiselect
-            :max-height="600"
             v-model="value.dataType"
             :options="dataTypeOption"
             @select="test()"
@@ -135,13 +142,19 @@
   <br><br>
   </div>
   <div class="container dt-border">
-  <div>
-    <label class="attribute__label">New Attribute:</label>
-    <input class="attribute__input"
-           style="height: 20px; width: 200px;"
-           type="text" v-model="newAttribute" />
+    <div class="row-build">
+      <div style="display: flex; align-items: center;">
+        <input class="attribute__input"
+          style="height: 20px; width: 200px;
+          margin-right: 10px; 
+          "
+          type="text" v-model="newAttribute" />
 
-         <button class="attribute__button" @click="addAttribute()">Add new Attribute </button>
+        <button class="attribute__button" @click="addAttribute()">Add new Attribute </button>
+      </div>
+      <div>
+        <button class="rebuild-button" @click="buildEntity()"> Rebuild List </button>
+      </div>
   </div>
   <div>
     <!--
@@ -153,7 +166,6 @@
     -->
   </div>
   <div>
-    <button class="attribute__button" @click="buildEntity()">Build </button>
   </div>
 
   </div>
@@ -171,17 +183,34 @@ export default {
   components: {
     draggable,
   },
+  watch: {
+    /*
+    attributes: {
+      handler() {
+        // When the originalObject is modified, set the 'changed' flag to true
+        //this.originalObject.changed = true;
+        if(this.enableWatch){
+          this.changed = true;
+        }
+      },
+      deep: true, // Watch for changes within nested objects and arrays
+    },
+     */
+  },
   data() {
     return {
       character: {},
+      changed: false,
+      enableWatch: false,
       attributes: {name: {name: 'name', dataType: 'string', dataFormat: 'string'}},
+      oldAttributes: {},
       setup: {dataType: 'list', referenceTo: '', dataFormat: 'current_and_max',
         isList: false, data: [], referenceList: []},
       newAttribute: '',
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
       dataTypeOption: [ 'number', 'string','current_and_max'
-                       ,'boolean', 'script_list'],
+                       ,'boolean', 'script_list', 'resource'],
       listOption: ['all', 'select', 'multiselect'],
       dataFormatOption: ['default', 'current_and_max'],
       referenceGroup: Object.keys(this.$root.world.group),
@@ -370,15 +399,24 @@ export default {
         newAttributes[key] = this.attributes[key];
       }, this);
       this.attributes = newAttributes;
+      this.changed = false;
     },
   },
   mounted() {
+    console.log("MOUNTED ATTIRBUTES");
+    console.log("MOUNTED ATTIRBUTES");
+    console.log("MOUNTED ATTIRBUTES");
     console.log("ENTITY NAME", this.entityName)
     let tmp = this.$root.world.group[this.entityName];
     console.log("TEMP", tmp);
     if(tmp.buildInfo){
       this.attributes = tmp.buildInfo;
+      this.enableWatch = true;
+      this.changed = false;
     }
+    this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
+    console.log(this.oldAttributes == this.attributes);
+
   }
 }
 </script>
@@ -424,6 +462,22 @@ export default {
   background-color: #0062cc;
 }
 
+.build-button{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: auto;
+}
+
+.build-button:hover {
+  background-color: #0062cc;
+}
+
+
 
 .row {
   display: flex;
@@ -444,7 +498,7 @@ export default {
 }
 
 .body {
-  height: 500px;
+  height: 526px;
   position: relative;
 }
 
@@ -460,5 +514,53 @@ export default {
   width: 100%;
   z-index: 1;
 }
+
+.center-container {
+	cursor: pointer;
+  text-align: center; /* Center horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically */
+  height: 38px; /* Set a fixed height for the container if needed */
+  border: 1px solid #ccc; /* Optional: Add a border for visualization */
+}
+.center-container:hover {
+	text-decoration: none; /* Remove underline on hover if not needed */
+	font-weight: bold; /* Optionally, make the text bold on hover */
+	text-decoration: underline; /* Optionally, underline the word */
+	color: blue;
+}
+.arow {
+}
+.arow:hover{
+  background-color: #f2f2f2;
+  border-color: blue;
+   border: 1px solid #ccc;
+ }
+
+.row-build {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+	top: 0px;
+}
+
+.rebuild-button{
+  background-color: #FFB6C1;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: auto;
+}
+
+.rebuild-button:hover {
+  background-color: #FF69B4;
+}
+
+
 
 </style>

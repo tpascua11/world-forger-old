@@ -4,9 +4,7 @@
 Entity Rows better show to see Nested Select Options
 Nested Select and Multiselect
 
-
 Make A Better Way to see Rows of Entity
-
 
 Script Event
 Make a way to store a value for entity
