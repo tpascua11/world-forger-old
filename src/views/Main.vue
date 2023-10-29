@@ -80,7 +80,7 @@ export default {
       this.newTableView = false;
       this.entityTableView = true;
       this.entityNameSelect = entityName;
-      //this.$forceUpdate();
+      this.$forceUpdate();
     },
     processJsonData(jsonData) {
       // Handle the loaded jsonData here

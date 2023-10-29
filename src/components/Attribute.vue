@@ -1,5 +1,5 @@
 <template>
-<div>
+  <div>
   <div class="container dt-border">
     <!-- Headers -->
     <div class="pure-g title">
@@ -18,7 +18,7 @@
       <div class="pure-u-6-24" >
         Reference Focus
       </div>
-      <div class="pure-u-2-24">
+      <div class="pure-u-2-24" @click="buildEntity()">
         <!--
         <button class="attribute__button" @click="setKeyPosition()">
           Reposition
@@ -29,6 +29,7 @@
     <div class="dt-border"></div>
     <!-- Body -->
     <div class="body">
+      {{attributes}}
     <br>
     <div v-for="(value, key) in attributes" :key="key">
       <div v-if="value.name != 'name'" class="pure-g arow" style="z-index=2;
@@ -146,7 +147,7 @@
       <div style="display: flex; align-items: center;">
         <input class="attribute__input"
           style="height: 20px; width: 200px;
-          margin-right: 10px; 
+          margin-right: 10px;
           "
           type="text" v-model="newAttribute" />
 
@@ -164,11 +165,20 @@
       </li>
     </ul>
     -->
-  </div>
-  <div>
-  </div>
 
   </div>
+  <div>
+
+
+  </div>
+
+</div>
+
+<div>
+</div>
+<div class="centered-div">
+  <button class="delete-table-button" @click="buildEntity()"> Delete Table </button>
+</div>
 </div>
 </template>
 
@@ -184,6 +194,15 @@ export default {
     draggable,
   },
   watch: {
+    entityName(newE, oldE) {
+      if(newE != oldE){
+        console.log("-----------------");
+        console.log("New Table Set", this.entityName);
+        console.log("-----------------");
+        console.log("ATTRIBUTES", this.attributes);
+        this.resetInfo2();
+      }
+    },
     /*
     attributes: {
       handler() {
@@ -254,6 +273,9 @@ export default {
       return this.objectListToList(this.$root.world.group[name].list);
     },
     buildEntity(){
+      console.log("LETS BUILD!!!!");
+      console.log("LETS BUILD!!!!");
+      console.log("LETS BUILD!!!!");
       let newTemplateInfo = {};
 
       Object.keys(this.attributes).forEach(key => {
@@ -361,7 +383,8 @@ export default {
 
       return newEntity;
     },
-
+    deleteTable(){
+    },
     //----- Position Changer -----
     selectProperty(name, property){
       this.dialogState = true;
@@ -401,23 +424,39 @@ export default {
       this.attributes = newAttributes;
       this.changed = false;
     },
+
+    resetInfo(){
+      let tmp = this.$root.world.group[this.entityName];
+      console.log("TEMP", tmp);
+      if(tmp.buildInfo){
+        this.attributes = tmp.buildInfo;
+        this.enableWatch = true;
+        this.changed = false;
+      }
+      this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
+      console.log(this.oldAttributes == this.attributes);
+    },
+    resetInfo2(){
+      //this.$forceUpdate();
+      let tmp = this.$root.world.group[this.entityName];
+      console.log("TMP!", JSON.stringify(tmp));
+      if(tmp.buildInfo){
+        this.attributes = tmp.buildInfo;
+        this.enableWatch = true;
+        this.changed = false;
+      } else {
+        tmp.buildInfo =
+        this.attributes = {name: {name: 'name', dataType: 'string', dataFormat: 'string'}};
+      }
+    },
+
+
   },
   mounted() {
     console.log("MOUNTED ATTIRBUTES");
-    console.log("MOUNTED ATTIRBUTES");
-    console.log("MOUNTED ATTIRBUTES");
-    console.log("ENTITY NAME", this.entityName)
-    let tmp = this.$root.world.group[this.entityName];
-    console.log("TEMP", tmp);
-    if(tmp.buildInfo){
-      this.attributes = tmp.buildInfo;
-      this.enableWatch = true;
-      this.changed = false;
-    }
-    this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
-    console.log(this.oldAttributes == this.attributes);
-
-  }
+    console.log("ENTITY NAME", this.entityName);
+    this.resetInfo();
+  },
 }
 </script>
 
@@ -559,6 +598,33 @@ export default {
 
 .rebuild-button:hover {
   background-color: #FF69B4;
+}
+
+.delete-table-button{
+  background-color: violet;
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.delete-table-button:hover {
+  background-color: #FF69B4;
+}
+
+
+.centered-div {
+	text-align: center; /* Center the content horizontally */
+	display: flex;
+	justify-content: center; /* Center the content both horizontally and vertically */
+	align-items: center;
+	height: 60px; /* Set the height of the div */
+}
+
+.centered-div button {
+	/* You can style the button as needed */
 }
 
 
