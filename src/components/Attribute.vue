@@ -273,9 +273,6 @@ export default {
       return this.objectListToList(this.$root.world.group[name].list);
     },
     buildEntity(){
-      console.log("LETS BUILD!!!!");
-      console.log("LETS BUILD!!!!");
-      console.log("LETS BUILD!!!!");
       let newTemplateInfo = {};
 
       Object.keys(this.attributes).forEach(key => {
@@ -437,7 +434,6 @@ export default {
       console.log(this.oldAttributes == this.attributes);
     },
     resetInfo2(){
-      //this.$forceUpdate();
       let tmp = this.$root.world.group[this.entityName];
       console.log("TMP!", JSON.stringify(tmp));
       if(tmp.buildInfo){
