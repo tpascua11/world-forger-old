@@ -24,6 +24,7 @@
     <div v-if="showView=='ENTITY_TEMPLATE'" class="pure-u-18-24">
       <Attribute
         v-bind:entityName="groupEntity"
+        @newTable="newTable"
       />
     </div>
 
@@ -290,6 +291,8 @@ export default {
       return this.$root.world.group[this.groupEntity]
     },
     thisMapList: function(){
+      if(!this.$root.world.group[this.groupEntity]) return [];
+
       return this.$root.world.group[this.groupEntity].list
     },
     templateInfo: function(){
@@ -300,6 +303,10 @@ export default {
   methods:{
     test2(){
       console.log("TEST 2");
+    },
+    newTable(){
+      console.log("New Table Test");
+      this.$emit("newTable");
     },
     selectEntity: function(entity){
       this.selectedEntity = entity;

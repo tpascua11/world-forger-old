@@ -29,7 +29,6 @@
     <div class="dt-border"></div>
     <!-- Body -->
     <div class="body">
-      {{attributes}}
     <br>
     <div v-for="(value, key) in attributes" :key="key">
       <div v-if="value.name != 'name'" class="pure-g arow" style="z-index=2;
@@ -177,7 +176,7 @@
 <div>
 </div>
 <div class="centered-div">
-  <button class="delete-table-button" @click="buildEntity()"> Delete Table </button>
+  <button class="delete-table-button" @click="deleteTable()"> Delete Table </button>
 </div>
 </div>
 </template>
@@ -380,8 +379,6 @@ export default {
 
       return newEntity;
     },
-    deleteTable(){
-    },
     //----- Position Changer -----
     selectProperty(name, property){
       this.dialogState = true;
@@ -445,6 +442,12 @@ export default {
         this.attributes = {name: {name: 'name', dataType: 'string', dataFormat: 'string'}};
       }
     },
+    deleteTable(){
+      if(!confirm("Delete Table?")) return;
+      this.attributes = {name: {name: 'name', dataType: 'string', dataFormat: 'string'}};
+      delete this.$root.world.group[this.entityName];
+      this.$emit("newTable");
+    }
 
 
   },

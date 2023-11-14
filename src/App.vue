@@ -8,9 +8,8 @@
 		<router-link to="/entity">entity</router-link>
 		-->
 	</nav>
-	<div class="fixedBottom">
+  <div class="fixedBottom">
 		<ul>
-
 				<li v-for="navItem in seeEntityGroup" @click="selectEntityTable(navItem)">
 					{{ navItem }}
 				</li>

@@ -16,7 +16,8 @@
       v-bind:title="entityNameSelect"
       v-bind:groupEntity="entityNameSelect"
       v-bind:entityMode="entityMode"
-      v-if="entityTableView"/>
+      v-if="entityTableView"
+      @newTable="newTable"/>
 
     <div class="fixedBottom">
       <ul>
@@ -64,6 +65,11 @@ export default {
   setup() {},
   methods:{
     test(){
+      console.log("TEST");
+      this.newTableView = true;
+      this.entityTableView = false;
+    },
+    newTable(){
       console.log("TEST");
       this.newTableView = true;
       this.entityTableView = false;
