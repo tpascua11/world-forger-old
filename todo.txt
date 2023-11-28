@@ -1,3 +1,21 @@
+1. Character Attributes
+
+   BuildInfo and TemplateInfo is too complicated
+   redo it to make it just BuildTemplateInfo
+
+   Type
+   By Other Table
+      Meaning it only target whatever created list exist in the specified table
+      (etc: if Stat Table - Strength, Agility, Stamina... will be the
+
+      Additionaly with 3 options,
+      All, Fixed, Multiselect, Single Select
+      All - Reference All rows the List
+      Fixed - Reference a selected rows from table
+
+
+
+
 --- Must Need Stuff ---
 
 -For Script List, Need to target Entity and their list

@@ -12,6 +12,7 @@
         v-bind:set_height="'550px'"
         v-bind:template="thisMap.template"
         v-bind:templateInfo="thisMap.templateInfo"
+        v-bind:buildInfo="thisMap.buildInfo"
         @selected="refreshArea"
         @created="refreshInteractionList"
         @entitySetting="selectAttribute"

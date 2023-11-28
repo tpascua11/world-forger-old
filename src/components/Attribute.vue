@@ -273,7 +273,11 @@ export default {
     },
     buildEntity(){
       let newTemplateInfo = {};
+      //TODO: Merge BuildInfo into Template Info
+      //------------------------------------------------
 
+
+      //TODO:-------------------------------------------
       Object.keys(this.attributes).forEach(key => {
         let tmp = this.attributes[key];
         newTemplateInfo[key] = {
@@ -291,6 +295,9 @@ export default {
 
       console.log("BUILD INFO",
         this.$root.world.group[this.entityName].buildInfo);
+
+      console.log("TEMPLATE ", JSON.stringify(newTemplateInfo));
+      console.log("BUILD INFO ", JSON.stringify(this.attributes));
 
     },
     rebuildEntityList(){
@@ -422,6 +429,8 @@ export default {
     resetInfo(){
       let tmp = this.$root.world.group[this.entityName];
       console.log("TEMP", tmp);
+      console.log("TEMP", JSON.stringify(tmp.templateInfo));
+      console.log("TEMP", JSON.stringify(tmp.buildInfo));
       if(tmp.buildInfo){
         this.attributes = tmp.buildInfo;
         this.enableWatch = true;

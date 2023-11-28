@@ -1,5 +1,5 @@
 <template>
-  <div class="dt-border container">
+	<div class="dt-border container">
 		<section class="">
 			<div v-on:click="test" v-if="title" class="border-down-x2">
 				<div class="title-container">
@@ -8,8 +8,26 @@
 				</div>
 			</div>
 
+			<div class="border-down-x2">
+				<button v-on:click="isExpanded = !isExpanded" class="pure-button full-width">
+					Search Advanced
+				</button>
+				<div v-if="isExpanded">
+					<div v-for="(value, key) in filterList" :key="key">
+    				<div class="form-group">
+							<label for="inputField"> {{key}} </label>
+							<input v-model="filterList[key]" placeholder="..." />
+						</div>
+
+					</div>
+					<button v-on:click="newSort();" class="pure-button full-width">
+						Sort
+					</button>
+				</div>
+			</div>
+
       <div id="the-list" class="cool-scroll" v-bind:style="{height: box_height}">
-				<div v-for="(row, index) in map" :key="index"
+				<div v-for="(row, index) in trueList" :key="index"
           v-bind:style="[ row == selected ? styleObject : {}]"
           class="border-down row clickable"
           v-on:click="selectRow(row)"
@@ -39,9 +57,19 @@ export default {
     refresh: function(){
       console.log("?");
       this.$forceUpdate();
-    }
+		},
+		title: function(){
+			console.log("refresh sort");
+			this.makeFilterList();
+		},
+		templateInfo: function(){
+			this.makeFilterList();
+		},
+		buildInfo: function(){
+			this.makeFilterList();
+		},
   },
-  props: ['value', 'title', 'map', 'set_height', 'area', 'template', 'templateInfo', 'refresh'],
+  props: ['value', 'title', 'map', 'set_height', 'area', 'template', 'templateInfo', 'buildInfo' ,'refresh'],
   data: function(){
     return {
       hi: {},
@@ -53,12 +81,28 @@ export default {
       },
       selectedItem: {},
       refTitle: this.title,
-      selected: {},
+			selected: {},
+			filterList: {},
+			trueList: {},
+			isExpanded: false,
     }
   },
-  mounted(){
+	mounted(){
+		this.makeFilterList();
   },
 	methods:{
+		makeFilterList(){
+			if(!this.templateInfo) this.filterList = {};
+			else{
+				Object.entries(this.templateInfo).forEach(([key, value]) => {
+					//console.log("VALUE", value);
+					if(value.type == 'string') this.filterList[key] = '';
+					//console.log("key", key);
+				});
+			console.log(this.filterList);
+			}
+			this.newSort();
+		},
 		test(){
 			console.log("TEST!");
 			this.$emit('entitySetting');
@@ -94,7 +138,9 @@ export default {
 
 			this.$emit("selected", this.selected);
 
-      this.$forceUpdate();
+			this.newSort();
+			this.$forceUpdate();
+
     },
     copyFromTemplateInfo: function(){
       console.log("Can i see if this exist", JSON.stringify(this.templateInfo));
@@ -133,6 +179,35 @@ export default {
 		titleClick:function(){
 			this.$emit('titleClick');
 		},
+		newSort: function(){
+			console.log("--------- SORT ------------");
+			let newFilter = [];
+			Object.entries(this.map).forEach(([key, value]) => {
+				let good = Object.entries(value).every(([key2, value2]) => {
+					if(Array.isArray(value2)){
+						return true
+						//TODO: Here check value contains any filterList[key2]
+						value2.some(function(val){
+							if(val.includes(this.filterList[key])) return true;
+						});
+					}
+					else{
+						if(this.filterList[key2]){
+							if(value2.includes(this.filterList[key2])){
+								return true
+							}
+							else return false;
+						}
+						else return true;
+					}
+				});
+				if(good){
+					newFilter.push(value);
+				}
+			});
+			console.log("new filter", newFilter);
+			this.trueList = newFilter;
+		},
   },
   computed: {
     refMap: function(){
@@ -149,7 +224,9 @@ export default {
       //console.log("test source", this.source);
       if(this.source) return this.$root.world[this.source][this.mapName];
       else return this.$root.world[this.mapName];
-    },
+		},
+		filteredSort(){
+		},
     box_height: function(){
       if(this.set_height) return this.set_height.toString();
       else return '300px';
@@ -218,7 +295,6 @@ export default {
 	align-items: center;
 	position: relative;
 	top: 8px;
-
 }
 
 .title-name:hover {
@@ -244,6 +320,15 @@ export default {
 	font-weight: bold; /* Optionally, make the text bold on hover */
 	text-decoration: underline; /* Optionally, underline the word */
 	color: blue;
+}
+
+label {
+  display: block;
+  margin-bottom: -1px;
+}
+
+.form-group {
+  margin-bottom: 10px; /* Adjust the margin as needed */
 }
 
 </style>
