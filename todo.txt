@@ -1,7 +1,7 @@
 1. Character Attributes
 
-   BuildInfo and TemplateInfo is too complicated
-   redo it to make it just BuildTemplateInfo
+   XXX BuildInfo and TemplateInfo is too complicated
+   XXX   redo it to make it just BuildTemplateInfo
 
    Type
    By Other Table

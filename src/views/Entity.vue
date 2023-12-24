@@ -12,12 +12,12 @@
         v-bind:set_height="'550px'"
         v-bind:template="thisMap.template"
         v-bind:templateInfo="thisMap.templateInfo"
-        v-bind:buildInfo="thisMap.buildInfo"
         @selected="refreshArea"
         @created="refreshInteractionList"
         @entitySetting="selectAttribute"
         @titleClick="showEntityTemplate"
         v-bind:refresh="refresh"
+        v-bind:listUpdated="listUpdated"
       />
     </div>
 
@@ -26,6 +26,7 @@
       <Attribute
         v-bind:entityName="groupEntity"
         @newTable="newTable"
+        @updateEntityList="updateEntityList"
       />
     </div>
 
@@ -109,76 +110,74 @@
                       <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
                         <div class="pure-g border-down">
                           <div class="pure-u-5-24" style="margin-top: 5px;">
-                            {{index2}}
+                            {{subAttributeRealName(index, index2)}}
                           </div>
                         <!--
                         <input class="borderless-gray" placeholder="name..."
                           v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
                         -->
-                        <div class="pure-u-19-24" style="">
-                        <div v-if="(templateInfo[index].type == 'string')">
-                          <label>
-                            <input class="borderless-gray" placeholder="name..."
-                              v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
-                          </label>
-                        </div>
-                        <div v-else-if="(templateInfo[index].type == 'number')">
-                          <label>
-                            <input class="borderless-gray" placeholder="name..."
-                              v-model="selectedEntity[index][index2]" type="number" style=" height: 25px; width: 50%;" />
-                          </label>
-                        </div>
-                        <div v-else-if="(templateInfo[index].type ==
-                          'current_and_max')">
-                          <label>
-                            Current: <input class="borderless-gray" placeholder="name..."
-                              v-model="selectedEntity[index][index2].current" type="number"
-                              style=" height: 25px; width: 30%;" />
+                          <div class="pure-u-19-24" style="">
+                            <div v-if="(templateInfo[index].type == 'string')">
+                              <label>
+                                <input class="borderless-gray" placeholder="name..."
+                                  v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
+                              </label>
+                            </div>
+                            <div v-else-if="(templateInfo[index].type == 'number')">
+                              <label>
+                                <input class="borderless-gray" placeholder="number..."
+                                  v-model="selectedEntity[index][index2]" type="number" style=" height: 25px; width: 50%;" />
+                              </label>
+                            </div>
+                            <div v-else-if="(templateInfo[index].type == 'current_and_max')">
+                              <label>
+                                Current: <input class="borderless-gray" placeholder="name..."
+                                  v-model="selectedEntity[index][index2].current" type="number"
+                                  style=" height: 25px; width: 30%;" />
 
-                            Max: <input class="borderless-gray" placeholder="name..."
-                              v-model="selectedEntity[index][index2].max" type="number" style="
-                              height: 25px; width: 30%;" />
-                          </label>
+                                Max: <input class="borderless-gray" placeholder="name..."
+                                  v-model="selectedEntity[index][index2].max" type="number" style="
+                                  height: 25px; width: 30%;" />
+                              </label>
+                            </div>
+                          </div>
                         </div>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-
-                  <!-- BASICS -->
-                  <div v-else-if="templateInfo[index]">
-                    <div v-if="templateInfo[index].type == 'list_current_and_max'">
-                      <div v-if="false">
-                        <StatList v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'stat'"/>
                       </div>
-                      <hr>
                     </div>
-                    <div v-else-if="(templateInfo[index].type == 'script_list') || (templateInfo[index].type == 'condition_list') || index == 'name'"> </div>
-                    <div v-else-if="(templateInfo[index].type == 'string')">
-                      <label>
-                        <input class="borderless-gray" placeholder="name..."
-                          v-model="selectedEntity[index]" type="text" style=" height: 25px; width: 50%;" />
-                      </label>
-                    </div>
-                    <div v-else-if="(templateInfo[index].type == 'number')">
-                      <label>
-                        <input class="borderless-gray" placeholder="name..."
-                          v-model="selectedEntity[index]" type="number" style=" height: 25px; width: 50%;" />
-                      </label>
-                    </div>
-                    <div v-else-if="(templateInfo[index].type ==
-                      'current_and_max')">
-                      <label>
-                        Current: <input class="borderless-gray" placeholder="name..."
-                          v-model="selectedEntity[index].current" type="number"
-                          style=" height: 25px; width: 30%;" />
+                    <!-- BASICS -->
+                    <div v-else-if="templateInfo[index]">
+                      <div v-if="templateInfo[index].type == 'list_current_and_max'">
+                        <div v-if="false">
+                          <StatList v-bind:title="index" v-model="selectedEntity[index]" v-bind:reference="'stat'"/>
+                        </div>
+                        <hr>
+                      </div>
+                      <div v-else-if="(templateInfo[index].type == 'script_list') || (templateInfo[index].type == 'condition_list') || index == 'name'"> </div>
+                      <div v-else-if="(templateInfo[index].type == 'string')">
+                        <label>
+                          <input class="borderless-gray" placeholder="name..."
+                            v-model="selectedEntity[index]" type="text" style=" height: 25px; width: 50%;" />
+                        </label>
+                      </div>
+                      <div v-else-if="(templateInfo[index].type == 'number')">
+                        <label>
+                          <input class="borderless-gray" placeholder="name..."
+                            v-model="selectedEntity[index]" type="number" style=" height: 25px; width: 50%;" />
+                        </label>
+                      </div>
+                      <div v-else-if="(templateInfo[index].type ==
+                        'current_and_max')">
+                        <label>
+                          Current: <input class="borderless-gray" placeholder="name..."
+                            v-model="selectedEntity[index].current" type="number"
+                            style=" height: 25px; width: 30%;" />
 
-                        Max: <input class="borderless-gray" placeholder="name..."
-                          v-model="selectedEntity[index].max" type="number" style="
-                          height: 25px; width: 30%;" />
-                      </label>
+                          Max: <input class="borderless-gray" placeholder="name..."
+                            v-model="selectedEntity[index].max" type="number" style="
+                            height: 25px; width: 30%;" />
+                        </label>
+                      </div>
                     </div>
-                  </div>
                 </div>
               </div>
               <hr>
@@ -276,6 +275,8 @@ export default {
       showView: 'entityEdit',
       //entityName: 'item',
       tempName: [],
+      goName: 'name',
+      listUpdated: 0,
     };
   },
   props: {
@@ -291,6 +292,9 @@ export default {
     thisMap: function(){
       return this.$root.world.group[this.groupEntity]
     },
+    thisGroup: function(){
+      return this.$root.world.group;
+    },
     thisMapList: function(){
       if(!this.$root.world.group[this.groupEntity]) return [];
 
@@ -304,6 +308,11 @@ export default {
   methods:{
     test2(){
       console.log("TEST 2");
+    },
+    updateEntityList(list){
+      console.log("FORCE UPDATE ENTITY LIST ---");
+      this.$root.world.group[this.groupEntity].list = list;
+      this.listUpdated++;
     },
     newTable(){
       console.log("New Table Test");
@@ -380,6 +389,17 @@ export default {
       if(type == 'string') list.push('');
       else if(type == 'number') list.push(0);
       else if(type == 'current_and_max') list.push({current: 0, max: 0});
+    },
+    subAttributeRealName(index, index2){
+      let trueIndex2 = (parseInt(index2) + 1).toString();
+      let referenceTo = this.templateInfo[index].referenceTo;
+      let deepi = this.thisGroup[referenceTo].list[trueIndex2];
+      if(deepi){
+        return deepi['name'];
+      }
+      else
+      return deepi;
+
     },
   },
   mounted(){

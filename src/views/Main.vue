@@ -83,6 +83,7 @@ export default {
     selectEntityTable(entityName){
 			this.$root.selectedEntityTableName = entityName;
       console.log("Select Entity Table", this.$root.selectedEntityTableName);
+      console.log("TABLE", JSON.stringify(this.$root.world.group[entityName]));
       this.newTableView = false;
       this.entityTableView = true;
       this.entityNameSelect = entityName;

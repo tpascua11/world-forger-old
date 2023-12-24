@@ -1,6 +1,9 @@
 <template>
   <div>
   <div class="container dt-border">
+    Non-Deletable List <input type="checkbox" v-model="newStructureInfo.nonDeletableList" />
+  </div>
+  <div class="container dt-border">
     <!-- Headers -->
     <div class="pure-g title">
       <div class="pure-u-4-24" >
@@ -10,10 +13,10 @@
         Type
       </div>
       <div class="pure-u-5-24" >
-        Reference To
+        Link Reference To
       </div>
       <div class="pure-u-3-24" >
-        List
+        List Type
       </div>
       <div class="pure-u-6-24" >
         Reference Focus
@@ -70,13 +73,13 @@
         </div>
 
         <div class="pure-u-3-24" v-if="value.referenceTo">
-          <VueMultiselect
-            v-model="value.isList"
-            :options="listOption"
-            :show-labels="false"
-            placeholder="..."
-          >
-          </VueMultiselect>
+            <VueMultiselect
+              v-model="value.isList"
+              :options="listOption"
+              :show-labels="false"
+              placeholder="..."
+            >
+            </VueMultiselect>
         </div>
 
         <div class="pure-u-6-24" v-if="value.isList && value.isList != 'ALL'">
@@ -92,7 +95,9 @@
           >
           </VueMultiselect>
           -->
-
+          <div v-if="value.isList == 'all'">
+          </div>
+          <div v-else>
           <VueMultiselect v-model="value.referenceList"
             :multiple="true"
             track-by="name"
@@ -102,6 +107,7 @@
             :searchable="false" :allow-empty="false">
             <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong> is written in<strong>  {{ option.language }}</strong></template>
           </VueMultiselect>
+          </div>
         </div>
 
       </div>
@@ -199,7 +205,7 @@ export default {
         console.log("New Table Set", this.entityName);
         console.log("-----------------");
         console.log("ATTRIBUTES", this.attributes);
-        this.resetInfo2();
+        this.resetInfo();
       }
     },
     /*
@@ -227,8 +233,11 @@ export default {
       newAttribute: '',
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
-      dataTypeOption: [ 'number', 'string','current_and_max'
-                       ,'boolean', 'script_list', 'resource'],
+      dataTypeOption: [
+        'number', 'string','current_and_max',
+        'boolean', 'script_list', 'resource',
+        'table'
+        ],
       listOption: ['all', 'select', 'multiselect'],
       dataFormatOption: ['default', 'current_and_max'],
       referenceGroup: Object.keys(this.$root.world.group),
@@ -246,7 +255,10 @@ export default {
       rename: '',
       dialogPosition: false,
       keyPositionList: [],
-
+      newStructureInfo: {
+        fixedRow: false,
+        nonDeletableList: false,
+      },
     }
   },
   methods: {
@@ -275,9 +287,17 @@ export default {
       let newTemplateInfo = {};
       //TODO: Merge BuildInfo into Template Info
       //------------------------------------------------
-
+      Object.keys(this.attributes).forEach(key => {
+        this.attributes[key].type = this.attributes[key].dataType;
+        this.attributes[key].ref = this.attributes[key].referenceTo;
+        this.attributes[key].value_option =
+          this.attributes[key].dataType ==
+          'current_and_max' ? {'max': '#', 'current': '#'} : null;
+      });
+      console.log("NEW ATTRIBUTES AP", JSON.stringify(this.attributes));
 
       //TODO:-------------------------------------------
+      /*
       Object.keys(this.attributes).forEach(key => {
         let tmp = this.attributes[key];
         newTemplateInfo[key] = {
@@ -288,24 +308,109 @@ export default {
           referenceList: tmp.referenceList,
         };
       });
-
-      this.$root.world.group[this.entityName].templateInfo = newTemplateInfo;
       this.$root.world.group[this.entityName].buildInfo = this.attributes;
-      this.rebuildEntityList();
+       */
+      this.$root.world.group[this.entityName].templateInfo = this.attributes;
+      this.$root.world.group[this.entityName].structureInfo = this.newStructureInfo;
+      //Template Info is what type of data rows are
+      //Structure Info is the rules of what it can be
 
-      console.log("BUILD INFO",
-        this.$root.world.group[this.entityName].buildInfo);
+      this.rebuildEntityList();
 
       console.log("TEMPLATE ", JSON.stringify(newTemplateInfo));
       console.log("BUILD INFO ", JSON.stringify(this.attributes));
 
     },
+
+
     rebuildEntityList(){
+      let attributeList = this.$root.world.group[this.entityName].templateInfo;
+      let entityList    = this.$root.world.group[this.entityName].list;
+      let newEntityList = {};
+
+      Object.keys(entityList).forEach(row => {
+        console.log("ROW", entityList[row]);
+        newEntityList[row] = {};
+
+        Object.keys(attributeList).forEach(attribute => {
+          console.log("Attribute", attribute);
+          console.log("Attribute Property", attributeList[attribute]);
+          let attributeInfo = attributeList[attribute];
+
+
+          //Normal
+          if(!attributeInfo.isList){
+            if(entityList[row][attribute]){
+              newEntityList[row][attribute] = entityList[row][attribute];
+              //TODO: IF Type Change Adapt the changes
+            }
+            else{
+              newEntityList[row][attribute] = 0;
+            }
+          }
+          //Sub Attributes
+          else if(attributeInfo.isList === 'all'){
+            let referenceEntityList = this.newEntityReference(attributeInfo.referenceTo);
+            newEntityList[row][attribute] = {};
+
+            Object.keys(referenceEntityList).forEach(subAttribute => {
+              console.log("SUB ATTRIBUTE", subAttribute);
+              console.log("ROW FT", entityList[row][attribute][subAttribute]);
+              if(this.checkExist(entityList[row][attribute][subAttribute])){
+                console.log("EXIST!");
+                //TODO: IF Type Change Adapt the changes
+                console.log('Format this value', this.reformatValue(entityList[row][attribute][subAttribute],
+                  attributeInfo.type));
+
+                newEntityList[row][attribute][subAttribute] =
+                  this.reformatValue(entityList[row][attribute][subAttribute], attributeInfo.type);
+              }
+              else{
+                console.log("CREATE NEW");
+                newEntityList[row][attribute][subAttribute] = 2;
+              }
+            });
+          }
+          /*
+          if(attributeInfo.isList){
+            if(attributeInfo.isList === 'all'){
+              console.log("ALL ACCEPTED");
+            }
+          }
+          */
+        });
+
+      });
+      console.log("NEW ENTITY LIST", newEntityList);
+
+      //this.$root.world.group[this.entityName].list = newEntityList;
+      this.$emit('updateEntityList', newEntityList);
+    },
+    checkExist(value){
+      if (value !== undefined && value !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    rebuildEntityList2(){
       let setup = this.$root.world.group[this.entityName].templateInfo;
-      let refList = this.$root.world.group[this.entityName],templateInfo;
+      let refList = this.$root.world.group[this.entityName].templateInfo;
+      console.log("-=-=-=-=" , JSON.stringify(setup));
 
       let list = this.$root.world.group[this.entityName].list;
       let newList = {};
+      //console.log("Reference LIST", this.$root.world.group[this.referenceTo].templateInfo);
+
+      //console.log("ALL LIST", allList);
+
+      //console.log("ALL LIST", allList);
+      //console.log("SEE SETUP!", setup)
+
+      //let allList;
+      if(setup.isList === 'all'){
+        console.log("SETUP REFERENCE TO", setup.referenceTo);
+      }
 
       Object.keys(list).forEach(key => {
         console.log("KEY 1", key);
@@ -313,12 +418,16 @@ export default {
 
         for (let property in setup) {
           let flist = setup[property].referenceList;
+          let alistref = setup[property].referenceTo;
+          console.log("referenceTo", JSON.stringify(alistref));
+          console.log("CHECK FLIST", JSON.stringify(flist));
 
           if(setup[property].isList == 'all'){
-            newList[key][property] = {};
-            if(flist){
-              Object.keys(flist).forEach(key2 => {
-                let rename = flist[key2].name;
+            /*
+            if(allList){
+              newList[key][property] = {};
+              Object.keys(allList).forEach(key2 => {
+                let rename = allList[key2].name;
                 if(!list[key][property]) list[key][property] = {};
                 if(list[key][property][rename]){
                   newList[key][property][rename] = list[key][property][rename];
@@ -326,6 +435,32 @@ export default {
                 newList[key][property][rename] = this.reformatEntity(list[key][property][rename], property);
               });
             }
+             */
+            let allList = this.newEntityReference(setup[property].referenceTo);
+            console.log("ALL LIST CHECK!", allList);
+            if(allList){
+              allList.forEach(function(row){
+                console.log("ROW", row);
+                let rename = row.name;
+                console.log("name", rename);
+                console.log("key", key);
+                console.log("property", property);
+                /*
+                console.log("full", list[key][property]);
+                //newList[key][property] = {};
+                if(!list[key][property][name]){
+                  console.log("NEW PROPERTY SET!!");
+                  newList[key][property][name] = 0;
+                }
+                else{
+                  console.log("OLD!!");
+                  newList[key][property][rename] = this.reformatEntity(list[key][property][rename], property);
+                }
+                */
+              });
+
+            }
+            console.log("cooler new list", newList);
           }
 
           else if(setup[property].isList == 'select'){
@@ -344,7 +479,6 @@ export default {
           else if(setup[property].isList == 'multiselect'){
             if(flist){
             newList[key][property] = {};
-            newList[key][property] = {};
             Object.keys(flist).forEach(key2 => {
               let rename = flist[key2].name;
               if(list[key][property][rename]){
@@ -362,10 +496,37 @@ export default {
       });
       this.$root.world.group[this.entityName].list = newList;
     },
+    reformatValue(value, fixProp){
+      console.log("VALUE", value);
+      console.log("Fix Prop", fixProp);
+      let varType = typeof value;
+      let newValue;
+
+      if(fixProp == 'string' && varType != 'string'){
+        newValue = '';
+      }
+      else if(fixProp == 'number' && varType != 'number'){
+        newValue = 0;
+      }
+      else if(fixProp == 'script_list' && !Array.isArray(entity)){
+        newValue = [];
+      }
+      else if(fixProp == 'current_and_max' && varType != 'object'){
+        newValue = {current: 0, max: 0};
+      }
+      else{
+        newValue = value;
+      }
+
+      return newValue;
+    },
+
     reformatEntity(entity, key){
       let setup = this.$root.world.group[this.entityName].templateInfo;
+      console.log("REFORTMAT 1");
       let varType = typeof entity;
       let newEntity;
+      console.log("REFORTMAT 2");
       let fixProp = setup[key].type;
 
       if(fixProp == 'string' && varType != 'string'){
@@ -431,11 +592,22 @@ export default {
       console.log("TEMP", tmp);
       console.log("TEMP", JSON.stringify(tmp.templateInfo));
       console.log("TEMP", JSON.stringify(tmp.buildInfo));
+      /*
       if(tmp.buildInfo){
         this.attributes = tmp.buildInfo;
         this.enableWatch = true;
         this.changed = false;
       }
+       */
+      if(tmp.templateInfo){
+        this.attributes = tmp.templateInfo;
+        this.enableWatch = true;
+        this.changed = false;
+      }
+      if(tmp.structureInfo){
+        this.newStructureInfo = tmp.structureInfo;
+      }
+
       this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
       console.log(this.oldAttributes == this.attributes);
     },

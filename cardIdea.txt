@@ -1,0 +1,9 @@
+[Character]
+  HP      - number
+  Actions - []
+
+[Action]
+  Damage - number
+  Speed  - number
+  Target - string
+

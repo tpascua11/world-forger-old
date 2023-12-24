@@ -18,7 +18,6 @@
 							<label for="inputField"> {{key}} </label>
 							<input v-model="filterList[key]" placeholder="..." />
 						</div>
-
 					</div>
 					<button v-on:click="newSort();" class="pure-button full-width">
 						Sort
@@ -68,8 +67,12 @@ export default {
 		buildInfo: function(){
 			this.makeFilterList();
 		},
+		listUpdated: function(){
+			console.log("LIST UPDATED--------------------");
+			this.makeFilterList();
+		}
   },
-  props: ['value', 'title', 'map', 'set_height', 'area', 'template', 'templateInfo', 'buildInfo' ,'refresh'],
+  props: ['value', 'title', 'map', 'set_height', 'area', 'template', 'templateInfo', 'buildInfo' ,'refresh', 'listUpdated'],
   data: function(){
     return {
       hi: {},
@@ -91,17 +94,23 @@ export default {
 		this.makeFilterList();
   },
 	methods:{
+		forceUpdate(){
+      this.$forceUpdate();
+		},
 		makeFilterList(){
-			if(!this.templateInfo) this.filterList = {};
+			console.log("NEW TEMPLATE INFO", this.templateInfo);
+			if(!this.templateInfo){
+				this.filterList = {};
+			}
 			else{
+				this.filterList = {};
 				Object.entries(this.templateInfo).forEach(([key, value]) => {
-					//console.log("VALUE", value);
 					if(value.type == 'string') this.filterList[key] = '';
-					//console.log("key", key);
 				});
 			console.log(this.filterList);
 			}
 			this.newSort();
+			this.$forceUpdate();
 		},
 		test(){
 			console.log("TEST!");
@@ -147,16 +156,59 @@ export default {
       let newEntity = {};
 			Object.keys(this.templateInfo).forEach(key => {
 				if(!this.templateInfo[key]) return;
+
 				if(this.templateInfo[key].isList){
 					newEntity[key] = {};
-					Object.keys(this.templateInfo[key].referenceList).forEach(key2 => {
-						let name = this.templateInfo[key].referenceList[key2].name;
-						if(this.templateInfo[key].type == 'number' ) newEntity[key][name] = 0;
-						else if(this.templateInfo[key].type == 'string' ) newEntity[key][name] = '';
-						else if(this.templateInfo[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+					let refList;
+
+					if(this.templateInfo[key].isList === 'all'){
+						//console.log("SEE FERENCE LIST", this.templateInfo[key].referenceTo);
+						refList = this.objectListToList(this.$root.world.group[this.templateInfo[key].referenceTo].list);
+						console.log("REF LIST", refList);
+
+						Object.keys(refList).forEach(key2 => {
+							console.log("KEY2", key2);
+							newEntity[key][key2] = 0;
+						});
+					}
+					else{
+						refList = this.templateInfo[key].referenceList;
+						console.log("ref list multiselect", refList);
+
+						Object.keys(refList).forEach(key2 => {
+							console.log("refList", key);
+							let referenceName = refList[key2].id;
+
+							newEntity[key][referenceName] = 0;
+							//else if(refList[key].type == 'string' ) newEntity[key][name] = '';
+							//else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+
+						});
+						/*
+
+						if(refList[key].type == 'number' ) newEntity[key][name] = 0;
+						else if(refList[key].type == 'string' ) newEntity[key][name] = '';
+						else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+						 */
+					}
+
+
+					/*
+					Object.keys(refList).forEach(key2 => {
+						console.log("KEY--", key2);
+						let name;
+						else{
+							name = refList[key].referenceList[key2].name;
+
+							if(refList[key].type == 'number' ) newEntity[key][name] = 0;
+							else if(refList[key].type == 'string' ) newEntity[key][name] = '';
+							else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+						}
+
 						//else if(this.templateInfo[key].type == 'current_and_max' ) newEntity[key] = {'hp': {current: 0, max: 10}};
 						//:wconsole.log("TEST!?", newEntity[key]);
 					});
+					 */
 				}
 				else if(this.templateInfo[key].default_set){
           newEntity[key] = JSON.parse(JSON.stringify(this.templateInfo[key].default_set));
@@ -182,6 +234,7 @@ export default {
 		newSort: function(){
 			console.log("--------- SORT ------------");
 			let newFilter = [];
+			console.log("THIS MAP", this.map);
 			Object.entries(this.map).forEach(([key, value]) => {
 				let good = Object.entries(value).every(([key2, value2]) => {
 					if(Array.isArray(value2)){
