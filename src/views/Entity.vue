@@ -149,28 +149,73 @@
                           {{referenceList(templateInfo[index].referenceTo)}}
                           {{selectedEntity[index]}}
                           -->
-                          <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
-                              <VueMultiselect
-                                v-model="selectedEntity[index][index2].referenceID"
-                                deselect-label="Can't remove this value"
-                                placeholder="Select one"
-                                :options="referenceList(templateInfo[index].referenceTo)"
-                                :searchable="false"
-                                :allow-empty="false">
-                              <!--
-                              <template v-slot:selection="" slot-scope="">
-                              </template>
-                              -->
-                              <template v-slot:option="{option}">
-                                {{option}} - 
-                                {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
-                              </template>
-                              <template v-slot:singleLabel="{}" slot-scope="">
-                                  {{thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index][index2].referenceID]['name']}}
-                              </template>
-                            </VueMultiselect>
+                          <div>
+                            <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
+                              <div style="height: 45px">
+                              <div class="pure-u-12-24" >
+                                <!-- Reference Selector -->
+                                <VueMultiselect
+                                  v-model="selectedEntity[index][index2].referenceID"
+                                  deselect-label="Can't remove this value"
+                                  placeholder="Select..."
+                                  :options="referenceList(templateInfo[index].referenceTo)"
+                                  :searchable="false"
+                                  :allow-empty="false">
+                                  <!--
+                                  <template v-slot:selection="" slot-scope="">
+                                  </template>
+                                  -->
+                                  <template v-slot:option="{option}">
+                                    {{option}} -
+                                    {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
+                                  </template>
+                                  <template v-slot:singleLabel="{}" slot-scope="">
+                                      {{thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index][index2].referenceID]['name']}}
+                                  </template>
+                                </VueMultiselect>
+                              </div>
+                                <!-- Value Selector -->
+                              <div class="pure-u-9-24" >
+                                <div v-if="(templateInfo[index].type == 'string')">
+                                  <label>
+                                    <input class="borderless-gray" placeholder="name..."
+                                      v-model="selectedEntity[index][index2].data"
+                                      type="text" style=" height: 40px; width: 90%;" />
+                                  </label>
+                                </div>
+                                <div v-else-if="(templateInfo[index].type == 'number')">
+                                  <label>
+                                    <input class="borderless-gray" placeholder="number..."
+                                      v-model="selectedEntity[index][index2].data"
+                                      type="number" style=" height: 40px; width: 90%;" />
+                                  </label>
+                                </div>
+                                <div v-else-if="(templateInfo[index].type == 'current_and_max')">
+                                  <label>
+                                    Current: <input class="borderless-gray" placeholder="name..."
+                                      v-model="selectedEntity[index][index2].data.current" type="number"
+                                      style=" height: 25px; width: 50%;" />
+
+                                    Max: <input class="borderless-gray" placeholder="name..."
+                                      v-model="selectedEntity[index][index2].data.max" type="number" style="
+                                      height: 25px; width: 50%;" />
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="pure-u-3-24" >
+                                <button
+                                  v-on:click="removeObjectByIndex(selectedEntity[index]
+                                  , index2,
+                                  thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index][index2].referenceID]['name'])"
+                                  class="pure-button b-red"
+                                  style="height: 40px">
+                                  X
+                                </button>
+                              </div>
+                              </div>
+                            </div>
+                            <button @click="addReferenceToList(selectedEntity[index])"> Add </button>
                           </div>
-                        <button @click="addReferenceToList(selectedEntity[index])"> Add </button>
                       </div>
                     </div>
                     <!-- BASICS -->
@@ -430,11 +475,10 @@ export default {
       return deepi;
     },
     addReferenceToList(list){
-      list.push({referenceID: 0, data: 0});
+      list.push({referenceID: '0', data: 0});
       console.log("LIST", list);
     },
     referenceList(reference){
-
       /*
       let ref = this.thisGroup[reference].list;
 			let newList = Object.entries(ref).map(([referenceID, value]) => ({
@@ -444,6 +488,13 @@ export default {
       return newList;
        */
       return Object.keys(this.thisGroup[reference].list);
+    },
+    removeObjectByIndex(list, indexToRemove, name) {
+      if(!name) name = '---';
+      console.log("LIST", list);
+      if(!confirm(`Remove ${name}`)) return;
+      list.splice(indexToRemove, 1);
+      return list;
     }
   },
   mounted(){

@@ -187,9 +187,8 @@ export default {
 								let referenceName = refList[key2].id;
 
 								newEntity[key][referenceName] = 0;
-								//else if(refList[key].type == 'string' ) newEntity[key][name] = '';
+								//if (refList[key].type == 'string' ) newEntity[key][name] = '';
 								//else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
-
 							});
 						}
 						else{
