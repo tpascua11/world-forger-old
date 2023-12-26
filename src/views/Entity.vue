@@ -92,7 +92,7 @@
               </span>
             </div>
         </div>
-        <section class="cool-scroll" style="height: 70vh;">
+          <section class="cool-scroll" style="height: 70vh;">
           <div class="" v-if="showOption == 'ATTRIBUTE'">
             <div v-for="(row , index) in selectedEntity" :key="index">
               <div class="pure-g" v-if="index != 'name'">
@@ -107,41 +107,70 @@
                 <div class="pure-u-19-24" >
                     <!-- LIST COmplex-->
                     <div v-if="templateInfo[index] && templateInfo[index].isList">
-                      <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
-                        <div class="pure-g border-down">
-                          <div class="pure-u-5-24" style="margin-top: 5px;">
-                            {{subAttributeRealName(index, index2)}}
-                          </div>
-                        <!--
-                        <input class="borderless-gray" placeholder="name..."
-                          v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
-                        -->
-                          <div class="pure-u-19-24" style="">
-                            <div v-if="(templateInfo[index].type == 'string')">
-                              <label>
-                                <input class="borderless-gray" placeholder="name..."
-                                  v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
-                              </label>
+                      <!-- Reference ALL -->
+                      <div v-if="templateInfo[index].isList == 'all'">
+                        <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
+                          <div class="pure-g border-down">
+                            <div class="pure-u-5-24" style="margin-top: 5px;">
+                              {{subAttributeRealName(index, index2)}}
                             </div>
-                            <div v-else-if="(templateInfo[index].type == 'number')">
-                              <label>
-                                <input class="borderless-gray" placeholder="number..."
-                                  v-model="selectedEntity[index][index2]" type="number" style=" height: 25px; width: 50%;" />
-                              </label>
-                            </div>
-                            <div v-else-if="(templateInfo[index].type == 'current_and_max')">
-                              <label>
-                                Current: <input class="borderless-gray" placeholder="name..."
-                                  v-model="selectedEntity[index][index2].current" type="number"
-                                  style=" height: 25px; width: 30%;" />
+                            <div class="pure-u-19-24" style="">
+                              <div v-if="(templateInfo[index].type == 'string')">
+                                <label>
+                                  <input class="borderless-gray" placeholder="name..."
+                                    v-model="selectedEntity[index][index2]" type="text" style=" height: 25px; width: 50%;" />
+                                </label>
+                              </div>
+                              <div v-else-if="(templateInfo[index].type == 'number')">
+                                <label>
+                                  <input class="borderless-gray" placeholder="number..."
+                                    v-model="selectedEntity[index][index2]" type="number" style=" height: 25px; width: 50%;" />
+                                </label>
+                              </div>
+                              <div v-else-if="(templateInfo[index].type == 'current_and_max')">
+                                <label>
+                                  Current: <input class="borderless-gray" placeholder="name..."
+                                    v-model="selectedEntity[index][index2].current" type="number"
+                                    style=" height: 25px; width: 30%;" />
 
-                                Max: <input class="borderless-gray" placeholder="name..."
-                                  v-model="selectedEntity[index][index2].max" type="number" style="
-                                  height: 25px; width: 30%;" />
-                              </label>
+                                  Max: <input class="borderless-gray" placeholder="name..."
+                                    v-model="selectedEntity[index][index2].max" type="number" style="
+                                    height: 25px; width: 30%;" />
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <!-- Reference Multipleselectable -->
+                      <div v-else-if="templateInfo[index].isList == 'multiselectable'">
+                        <!--
+                          {{templateInfo[index].referenceTo}}
+                          {{referenceList(templateInfo[index].referenceTo)}}
+                          {{selectedEntity[index]}}
+                          -->
+                          <div v-for="(row2 , index2) in selectedEntity[index]" :key="index2">
+                              <VueMultiselect
+                                v-model="selectedEntity[index][index2].referenceID"
+                                deselect-label="Can't remove this value"
+                                placeholder="Select one"
+                                :options="referenceList(templateInfo[index].referenceTo)"
+                                :searchable="false"
+                                :allow-empty="false">
+                              <!--
+                              <template v-slot:selection="" slot-scope="">
+                              </template>
+                              -->
+                              <template v-slot:option="{option}">
+                                {{option}} - 
+                                {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
+                              </template>
+                              <template v-slot:singleLabel="{}" slot-scope="">
+                                  {{thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index][index2].referenceID]['name']}}
+                              </template>
+                            </VueMultiselect>
+                          </div>
+                        <button @click="addReferenceToList(selectedEntity[index])"> Add </button>
                       </div>
                     </div>
                     <!-- BASICS -->
@@ -165,8 +194,7 @@
                             v-model="selectedEntity[index]" type="number" style=" height: 25px; width: 50%;" />
                         </label>
                       </div>
-                      <div v-else-if="(templateInfo[index].type ==
-                        'current_and_max')">
+                      <div v-else-if="(templateInfo[index].type == 'current_and_max')">
                         <label>
                           Current: <input class="borderless-gray" placeholder="name..."
                             v-model="selectedEntity[index].current" type="number"
@@ -180,9 +208,9 @@
                     </div>
                 </div>
               </div>
-              <hr>
-            </div>
+            <hr>
           </div>
+        </div>
         <div v-else-if="showOption == 'CONDITION'" class="">
         </div>
         <div v-else-if="showOption == 'SCRIPT_LIST'" class="">
@@ -306,6 +334,7 @@ export default {
     }
   },
   methods:{
+
     test2(){
       console.log("TEST 2");
     },
@@ -391,7 +420,7 @@ export default {
       else if(type == 'current_and_max') list.push({current: 0, max: 0});
     },
     subAttributeRealName(index, index2){
-      let trueIndex2 = (parseInt(index2) + 1).toString();
+      let trueIndex2 = (parseInt(index2)).toString();
       let referenceTo = this.templateInfo[index].referenceTo;
       let deepi = this.thisGroup[referenceTo].list[trueIndex2];
       if(deepi){
@@ -399,8 +428,23 @@ export default {
       }
       else
       return deepi;
-
     },
+    addReferenceToList(list){
+      list.push({referenceID: 0, data: 0});
+      console.log("LIST", list);
+    },
+    referenceList(reference){
+
+      /*
+      let ref = this.thisGroup[reference].list;
+			let newList = Object.entries(ref).map(([referenceID, value]) => ({
+				referenceID: parseInt(referenceID),
+				name: value.name
+      }));
+      return newList;
+       */
+      return Object.keys(this.thisGroup[reference].list);
+    }
   },
   mounted(){
   }

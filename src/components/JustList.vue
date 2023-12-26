@@ -127,9 +127,15 @@ export default {
 			this.$emit("selected", row);
     },
     addNewRow: function(){
-      console.log("TEST REF MAP", this.refMap);
-      let index = Object.keys(this.refMap).length + 1;
-      index;
+			console.log("TEST REF MAP", this.refMap);
+			let index;
+			index = Object.keys(this.refMap).length;
+			//if(Object.keys(this.refMap).length === 0){
+			//	index = 0;
+			//}
+			//else{
+      //	index = Object.keys(this.refMap).length + 1;
+			//}
       let newEntity;
 
       console.log("template", this.template);
@@ -175,15 +181,20 @@ export default {
 						refList = this.templateInfo[key].referenceList;
 						console.log("ref list multiselect", refList);
 
-						Object.keys(refList).forEach(key2 => {
-							console.log("refList", key);
-							let referenceName = refList[key2].id;
+						if(refList){
+							Object.keys(refList).forEach(key2 => {
+								console.log("refList", key);
+								let referenceName = refList[key2].id;
 
-							newEntity[key][referenceName] = 0;
-							//else if(refList[key].type == 'string' ) newEntity[key][name] = '';
-							//else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
+								newEntity[key][referenceName] = 0;
+								//else if(refList[key].type == 'string' ) newEntity[key][name] = '';
+								//else if(refList[key].type == 'current_and_max' ) newEntity[key][name] = {current: 0, max: 0};
 
-						});
+							});
+						}
+						else{
+							newEntity[key] = [];
+						}
 						/*
 
 						if(refList[key].type == 'number' ) newEntity[key][name] = 0;

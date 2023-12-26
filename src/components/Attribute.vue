@@ -19,7 +19,7 @@
         List Type
       </div>
       <div class="pure-u-6-24" >
-        Reference Focus
+        <!-- Reference Focus -->
       </div>
       <div class="pure-u-2-24" @click="buildEntity()">
         <!--
@@ -98,6 +98,7 @@
           <div v-if="value.isList == 'all'">
           </div>
           <div v-else>
+            <!--
           <VueMultiselect v-model="value.referenceList"
             :multiple="true"
             track-by="name"
@@ -107,6 +108,7 @@
             :searchable="false" :allow-empty="false">
             <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong> is written in<strong>  {{ option.language }}</strong></template>
           </VueMultiselect>
+          -->
           </div>
         </div>
 
@@ -238,7 +240,7 @@ export default {
         'boolean', 'script_list', 'resource',
         'table'
         ],
-      listOption: ['all', 'select', 'multiselect'],
+      listOption: ['all', 'multiselectable'],
       dataFormatOption: ['default', 'current_and_max'],
       referenceGroup: Object.keys(this.$root.world.group),
       options: [
@@ -327,14 +329,19 @@ export default {
       let attributeList = this.$root.world.group[this.entityName].templateInfo;
       let entityList    = this.$root.world.group[this.entityName].list;
       let newEntityList = {};
+      console.log("ENTITY LIST", entityList);
+      console.log("Attribute List", attributeList);
+
 
       Object.keys(entityList).forEach(row => {
+        console.log("ROW NUMBER", row);
         console.log("ROW", entityList[row]);
         newEntityList[row] = {};
 
+
         Object.keys(attributeList).forEach(attribute => {
-          console.log("Attribute", attribute);
-          console.log("Attribute Property", attributeList[attribute]);
+          //console.log("Attribute", attribute);
+          //console.log("Attribute Property", attributeList[attribute]);
           let attributeInfo = attributeList[attribute];
 
 
@@ -348,14 +355,17 @@ export default {
               newEntityList[row][attribute] = 0;
             }
           }
-          //Sub Attributes
+          //All Sub Attributes
           else if(attributeInfo.isList === 'all'){
             let referenceEntityList = this.newEntityReference(attributeInfo.referenceTo);
+            //console.log("REFERENCE ENTITY LIST", referenceEntityList);
             newEntityList[row][attribute] = {};
 
             Object.keys(referenceEntityList).forEach(subAttribute => {
-              console.log("SUB ATTRIBUTE", subAttribute);
-              console.log("ROW FT", entityList[row][attribute][subAttribute]);
+              //console.log("SUB ATTRIBUTE", subAttribute);
+              //console.log("ROW 1", entityList[row]);
+              //console.log("ROW 2", entityList[row][attribute]);
+              //console.log("ROW 3", entityList[row][attribute][subAttribute]);
               if(this.checkExist(entityList[row][attribute][subAttribute])){
                 console.log("EXIST!");
                 //TODO: IF Type Change Adapt the changes
@@ -371,13 +381,15 @@ export default {
               }
             });
           }
-          /*
-          if(attributeInfo.isList){
-            if(attributeInfo.isList === 'all'){
-              console.log("ALL ACCEPTED");
+          // Selectable Sub Attributes
+          else if(attributeInfo.isList === 'multiselectable'){
+            if(!Array.isArray(entityList[row][attribute])){
+              newEntityList[row][attribute] = [];
+            }
+            else{
+              newEntityList[row][attribute] = entityList[row][attribute];
             }
           }
-          */
         });
 
       });
