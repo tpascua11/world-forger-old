@@ -20,6 +20,7 @@
       </div>
       <div class="pure-u-6-24" >
         <!-- Reference Focus -->
+        Test
       </div>
       <div class="pure-u-2-24" @click="buildEntity()">
         <!--
@@ -32,12 +33,23 @@
     <div class="dt-border"></div>
     <!-- Body -->
     <div class="body">
-    <br>
-    <div v-for="(value, key) in attributes" :key="key">
+      <br>
+      <div v-for="(value, key) in attributes" :key="key">
+      <!--
+        <div v-for="(key, index) in newStructureInfo.orderList" :key="index">
+        -->
       <div v-if="value.name != 'name'" class="pure-g arow" style="z-index=2;
         margin-bottom: 5px;"> <!-- Base -->
+
+        <div class="pure-u-6-24">
+          <!--
+          <button @click="shiftPropertyDown(attributes, value.name)">Shift Down</button>
+          <button @click="shiftPropertyUp(attributes, value.name)">Shift Up</button>
+          -->
+          {{key}}
+        </div>
         <div class="pure-u-4-24" >
-          <div class="center-container ">
+          <div class="center-container" @click="selectProperty(key, attributes)">
             <!--
             <button class="attribute__button" @click="selectProperty(key, attributes)">
               {{value.name}}
@@ -80,7 +92,8 @@
               placeholder="..."
             >
             </VueMultiselect>
-        </div>
+          </div>
+
 
         <div class="pure-u-6-24" v-if="value.isList && value.isList != 'ALL'">
           <!--
@@ -114,17 +127,20 @@
 
       </div>
     </div>
-    <GDialog v-model="dialogState">
-      <div>
-        <p>Original name: {{selectedPropertyName}}</p>
-        <label for="new-name">New name:</label>
-        <input id="new-name" type="text" v-model="rename">
-        <button @click="renameProperty()">Change Property Name</button>
-        <p>New name: {{this.rename}}</p>
+
+    <GDialog v-model="dialogState" max-width="250">
+      <div class="d-wrapper">
+        <div class="d-content">
+          <p>Original name: {{selectedPropertyName}}</p>
+          <label for="new-name">New name:</label>
+          <input id="new-name" type="text" v-model="rename">
+          <button @click="renameProperty()">Change Property Name</button>
+        </div>
       </div>
     </GDialog>
+
     <GDialog v-model="dialogPosition">
-      <div>
+      <div class="wrapper">
         <draggable
           v-model="keyPositionList"
           @start="drag=true"
@@ -260,6 +276,7 @@ export default {
       newStructureInfo: {
         fixedRow: false,
         nonDeletableList: false,
+        orderList: [],
       },
     }
   },
@@ -281,6 +298,7 @@ export default {
         }
         else this.attributes[newName] = this.newSetup(newName, 'number', '', '');
       }
+      this.setNewOrderList();
     },
     newEntityReference(name){
       return this.objectListToList(this.$root.world.group[name].list);
@@ -393,10 +411,12 @@ export default {
         });
 
       });
+      //UPDATE NEW ENTITY LIST
       console.log("NEW ENTITY LIST", newEntityList);
-
       //this.$root.world.group[this.entityName].list = newEntityList;
       this.$emit('updateEntityList', newEntityList);
+      //UPDATE NEW ORDER LIST
+      //this.setNewOrderList();
     },
     checkExist(value){
       if (value !== undefined && value !== null) {
@@ -567,6 +587,10 @@ export default {
       this.rename = '';
     },
     renameProperty(){
+      if(this.rename === this.selectedPropertyName){
+        alert("Can't Rename");
+        return;
+      }
       let list = this.$root.world.group[this.entityName].list;
       let newList = {};
 
@@ -640,8 +664,71 @@ export default {
       this.attributes = {name: {name: 'name', dataType: 'string', dataFormat: 'string'}};
       delete this.$root.world.group[this.entityName];
       this.$emit("newTable");
-    }
+    },
 
+    //------------------------------------------------------------------------------
+    //TODO: Move To Better Location 
+    //------------------------------------------------------------------------------
+    setNewOrderList(){
+      //if(!this.newStructureInfo.orderList) this.newStructureInfo.orderList = [];
+      const newProperties = Object.keys(this.attributes).filter(prop => !this.newStructureInfo.orderList.includes(prop));
+      this.newStructureInfo.orderList = this.newStructureInfo.orderList.concat(newProperties);
+      console.log("NEW ORDER LIST", this.newStructureInfo.orderList);
+    },
+    shiftUp(index, list) {
+      if (index > 0) {
+        // Swap the positions of the current property and the one above it
+        [list[index], this.list[index - 1]] = [this.list[index - 1], this.list[index]];
+      }
+    },
+    shiftDown(index, list) {
+      if (index < this.list.length - 1) {
+        // Swap the positions of the current property and the one below it
+        [this.list[index], this.list[index + 1]] = [this.list[index + 1], this.list[index]];
+      }
+    },
+    shiftPropertyDown(obj, key) {
+      const keys = Object.keys(obj);
+      const index = keys.indexOf(key);
+
+      if (index < keys.length - 1) {
+        // Swap the current property with the one below it
+        [obj[keys[index]], obj[keys[index + 1]]] = [
+          obj[keys[index + 1]],
+          obj[keys[index]]
+        ];
+      }
+      //this.reorderListProperty();
+      console.log("OBJ", JSON.stringify(obj));
+    },
+    shiftPropertyUp(obj, key) {
+      const keys = Object.keys(obj);
+      const index = keys.indexOf(key);
+
+      if (index > 0) {
+        // Swap the current property with the one above it
+        [obj[keys[index]], obj[keys[index - 1]]] = [
+          obj[keys[index - 1]],
+          obj[keys[index]]
+        ];
+      }
+      //this.reorderListProperty();
+    },
+
+    reorderProperties(row) {
+      const orderedRow = {};
+      Object.keys(this.attributes).forEach(property => {
+        orderedRow[property] = row[property];
+      });
+      return orderedRow;
+    },
+
+    reorderListProperty(){
+      let entityList = this.$root.world.group[this.entityName].list;
+      Object.keys(entityList).forEach(key => {
+        entityList[key] = this.reorderProperties(entityList[key]);
+      });
+    }
 
   },
   mounted() {
@@ -820,5 +907,26 @@ export default {
 }
 
 
+
+.d-wrapper {
+  color: #000;
+}
+
+.d-content {
+  padding: 20px;
+}
+
+.d-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.d-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
 
 </style>
