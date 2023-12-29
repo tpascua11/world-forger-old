@@ -6,6 +6,8 @@
   <div class="container dt-border">
     <!-- Headers -->
     <div class="pure-g title">
+      <div class="pure-u-3-24">
+      </div>
       <div class="pure-u-4-24" >
         Name
       </div>
@@ -34,19 +36,16 @@
     <!-- Body -->
     <div class="body">
       <br>
-      <div v-for="(value, key) in attributes" :key="key">
       <!--
-        <div v-for="(key, index) in newStructureInfo.orderList" :key="index">
+      <div v-for="(value, key) in attributes" :key="key">
         -->
-      <div v-if="value.name != 'name'" class="pure-g arow" style="z-index=2;
+        <div v-for="(key, index) in newStructureInfo.orderList" :key="index">
+      <div v-if="attributes[key].name != 'name'" class="pure-g arow" style="z-index=2;
         margin-bottom: 5px;"> <!-- Base -->
 
-        <div class="pure-u-6-24">
-          <!--
-          <button @click="shiftPropertyDown(attributes, value.name)">Shift Down</button>
-          <button @click="shiftPropertyUp(attributes, value.name)">Shift Up</button>
-          -->
-          {{key}}
+        <div class="pure-u-3-24">
+          <button @click="shiftUp(newStructureInfo.orderList, index)">Up</button>
+          <button @click="shiftDown(newStructureInfo.orderList, index)">Down</button>
         </div>
         <div class="pure-u-4-24" >
           <div class="center-container" @click="selectProperty(key, attributes)">
@@ -55,7 +54,7 @@
               {{value.name}}
             </button>
             -->
-            {{value.name}}
+            {{attributes[key].name}}
           </div>
           <!-- <input class="attribute__input" type="string" v-model="value.name" />
           <div style="font-size:18px;  padding-top: 10px;">{{value.name}}</div>
@@ -64,7 +63,7 @@
         </div>
         <div class="pure-u-3-24" >
           <VueMultiselect
-            v-model="value.dataType"
+            v-model="attributes[key].dataType"
             :options="dataTypeOption"
             @select="test()"
             :show-labels="false"
@@ -74,7 +73,7 @@
         </div>
         <div class="pure-u-5-24" >
           <VueMultiselect
-            v-model="value.referenceTo"
+            v-model="attributes[key].referenceTo"
             :options="referenceGroup"
             @select="test()"
             :show-labels="false"
@@ -84,9 +83,9 @@
           </VueMultiselect>
         </div>
 
-        <div class="pure-u-3-24" v-if="value.referenceTo">
+        <div class="pure-u-3-24" v-if="attributes[key].referenceTo">
             <VueMultiselect
-              v-model="value.isList"
+              v-model="attributes[key].isList"
               :options="listOption"
               :show-labels="false"
               placeholder="..."
@@ -95,7 +94,7 @@
           </div>
 
 
-        <div class="pure-u-6-24" v-if="value.isList && value.isList != 'ALL'">
+        <div class="pure-u-6-24" v-if="attributes[key].isList && attributes[key].isList != 'ALL'">
           <!--
           <VueMultiselect
             v-model="value.referenceList"
@@ -108,7 +107,7 @@
           >
           </VueMultiselect>
           -->
-          <div v-if="value.isList == 'all'">
+          <div v-if="attribute[key].isList == 'all'">
           </div>
           <div v-else>
             <!--
@@ -675,16 +674,16 @@ export default {
       this.newStructureInfo.orderList = this.newStructureInfo.orderList.concat(newProperties);
       console.log("NEW ORDER LIST", this.newStructureInfo.orderList);
     },
-    shiftUp(index, list) {
+    shiftUp(list, index) {
       if (index > 0) {
         // Swap the positions of the current property and the one above it
-        [list[index], this.list[index - 1]] = [this.list[index - 1], this.list[index]];
+        [list[index], list[index - 1]] = [list[index - 1], list[index]];
       }
     },
-    shiftDown(index, list) {
-      if (index < this.list.length - 1) {
+    shiftDown(list, index) {
+      if (index < list.length - 1) {
         // Swap the positions of the current property and the one below it
-        [this.list[index], this.list[index + 1]] = [this.list[index + 1], this.list[index]];
+        [list[index], list[index + 1]] = [list[index + 1], list[index]];
       }
     },
     shiftPropertyDown(obj, key) {

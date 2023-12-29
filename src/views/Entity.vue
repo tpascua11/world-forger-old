@@ -94,7 +94,7 @@
         </div>
           <section class="cool-scroll" style="height: 70vh;">
           <div class="" v-if="showOption == 'ATTRIBUTE'">
-            <div v-for="(row , index) in selectedEntity" :key="index">
+            <div v-for="(index, key1) in orderInfo" :key="key1">
               <div class="pure-g" v-if="index != 'name'">
                 <div class="pure-u-4-24" style="text-align: center;
                   font-size:16px; margin-top: 5px;
@@ -376,6 +376,9 @@ export default {
     templateInfo: function(){
       if(!this.$root.world.group[this.groupEntity].templateInfo) return {};
       return this.$root.world.group[this.groupEntity].templateInfo;
+    },
+    orderInfo: function(){
+      return this.$root.world.group[this.groupEntity].structureInfo.orderList;
     }
   },
   methods:{
