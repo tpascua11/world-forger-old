@@ -107,7 +107,7 @@
           >
           </VueMultiselect>
           -->
-          <div v-if="attribute[key].isList == 'all'">
+          <div v-if="attributes[key].isList == 'all'">
           </div>
           <div v-else>
             <!--
