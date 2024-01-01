@@ -250,6 +250,50 @@
                             height: 25px; width: 30%;" />
                         </label>
                       </div>
+                      <div v-else-if="(templateInfo[index].type == 'table')">
+                        <div v-if="(templateInfo[index].type == 'table')">
+                          <VueMultiselect
+                            v-model="selectedEntity[index]"
+                            placeholder="Select..."
+                            :options="referenceList(templateInfo[index].referenceTo)"
+                            :searchable="false"
+                            :allow-empty="false">
+                            <!--
+                            <template v-slot:selection="" slot-scope="">
+                            </template>
+                            -->
+                            <template v-slot:option="{option}">
+                              {{option}} -
+                              {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
+                            </template>
+                            <template v-slot:singleLabel="{}" slot-scope="">
+                                <div v-if="thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index]]">
+                                {{thisGroup[templateInfo[index].referenceTo].list[selectedEntity[index]].name}}
+                                </div>
+                            </template>
+                          </VueMultiselect>
+                        </div>
+                      </div>
+                      <div v-else-if="(templateInfo[index].type == 'table_list')">
+                        <div v-if="(templateInfo[index].type == 'table_list')">
+                          <VueMultiselect
+                            v-model="selectedEntity[index]"
+                            placeholder="Select..."
+                            :options="referenceList(templateInfo[index].referenceTo)"
+                            :searchable="false"
+                            :multiple="true"
+                            :allow-empty="false">
+                            <template v-slot:option="{option}">
+                              {{option}} -
+                              {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
+                            </template>
+                            <template v-slot:tag="{option}" slot-scope="">
+                              {{thisGroup[templateInfo[index].referenceTo].list[option].name}}
+                              <br><br>
+                            </template>
+                          </VueMultiselect>
+                        </div>
+                      </div>
                     </div>
                 </div>
               </div>
@@ -325,6 +369,7 @@ export default {
     groupEntity(newE, oldE){
       if(newE != oldE){
         this.selectedEntity = {};
+        this.showView = "";
       }
     }
   },
@@ -378,7 +423,8 @@ export default {
       return this.$root.world.group[this.groupEntity].templateInfo;
     },
     orderInfo: function(){
-      return this.$root.world.group[this.groupEntity].structureInfo.orderList;
+      if(!this.$root.world.group[this.groupEntity].structureInfo) return [];
+      else return this.$root.world.group[this.groupEntity].structureInfo.orderList;
     }
   },
   methods:{

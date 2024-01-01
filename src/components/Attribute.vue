@@ -65,7 +65,7 @@
           <VueMultiselect
             v-model="attributes[key].dataType"
             :options="dataTypeOption"
-            @select="test()"
+            @select="forceRebuildEntity()"
             :show-labels="false"
             placeholder="..."
           >
@@ -75,7 +75,7 @@
           <VueMultiselect
             v-model="attributes[key].referenceTo"
             :options="referenceGroup"
-            @select="test()"
+            @select="forceRebuildEntity()"
             :show-labels="false"
             :multiple="false"
             placeholder="..."
@@ -89,11 +89,10 @@
               :options="listOption"
               :show-labels="false"
               placeholder="..."
+              @select="forceRebuildEntity()"
             >
             </VueMultiselect>
-          </div>
-
-
+        </div>
         <div class="pure-u-6-24" v-if="attributes[key].isList && attributes[key].isList != 'ALL'">
           <!--
           <VueMultiselect
@@ -253,7 +252,7 @@ export default {
       dataTypeOption: [
         'number', 'string','current_and_max',
         'boolean', 'script_list', 'resource',
-        'table'
+        'table', 'table_list'
         ],
       listOption: ['all', 'multiselectable'],
       dataFormatOption: ['default', 'current_and_max'],
@@ -298,6 +297,7 @@ export default {
         else this.attributes[newName] = this.newSetup(newName, 'number', '', '');
       }
       this.setNewOrderList();
+      this.buildEntity();
     },
     newEntityReference(name){
       return this.objectListToList(this.$root.world.group[name].list);
@@ -340,8 +340,9 @@ export default {
       console.log("BUILD INFO ", JSON.stringify(this.attributes));
 
     },
-
-
+    forceRebuildEntity(){
+      this.buildEntity();
+    },
     rebuildEntityList(){
       let attributeList = this.$root.world.group[this.entityName].templateInfo;
       let entityList    = this.$root.world.group[this.entityName].list;
@@ -367,6 +368,10 @@ export default {
             if(entityList[row][attribute]){
               newEntityList[row][attribute] = entityList[row][attribute];
               //TODO: IF Type Change Adapt the changes
+              if(attributeInfo.type == 'table_list'){
+                if(!Array.isArray(newEntityList[row][attribute]))
+                  newEntityList[row][attribute] = [];
+              }
             }
             else{
               newEntityList[row][attribute] = 0;
@@ -590,6 +595,8 @@ export default {
         alert("Can't Rename");
         return;
       }
+      console.log("OLD", this.selectedPropertyName);
+      console.log("NEW", this.rename);
       let list = this.$root.world.group[this.entityName].list;
       let newList = {};
 
@@ -600,13 +607,19 @@ export default {
       });
 
       let setup = this.$root.world.group[this.entityName].templateInfo;
-
       setup[this.rename] = setup[this.selectedPropertyName];
       this.attributes[this.rename] = this.attributes[this.selectedPropertyName];
       this.attributes[this.rename].name = this.rename;
 
       delete setup[this.selectedPropertyName];
       delete this.attributes[this.selectedPropertyName];
+
+
+      let newArray = this.newStructureInfo.orderList.map(item => (item ===
+        this.selectedPropertyName? this.rename: item));
+
+      this.newStructureInfo.orderList = newArray;
+      this.dialogState = false;
 
     },
     setKeyPosition(){
