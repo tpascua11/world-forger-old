@@ -154,19 +154,21 @@
                               <div style="height: 45px">
                               <div class="pure-u-12-24" >
                                 <!-- Reference Selector -->
+                                {{referenceList(templateInfo[index].referenceTo)}}
                                 <VueMultiselect
                                   v-model="selectedEntity[index][index2].referenceID"
                                   deselect-label="Can't remove this value"
                                   placeholder="Select..."
                                   :options="referenceList(templateInfo[index].referenceTo)"
-                                  :searchable="false"
-                                  :allow-empty="false">
+                                  :searchable="true"
+                                  :allow-empty="false"
+                                >
                                   <!--
                                   <template v-slot:selection="" slot-scope="">
                                   </template>
                                   -->
                                   <template v-slot:option="{option}">
-                                    {{option}} -
+                                    {{option}} --
                                     {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
                                   </template>
                                   <template v-slot:singleLabel="{}" slot-scope="">
@@ -256,7 +258,7 @@
                             v-model="selectedEntity[index]"
                             placeholder="Select..."
                             :options="referenceList(templateInfo[index].referenceTo)"
-                            :searchable="false"
+                            :searchable="true"
                             :allow-empty="false">
                             <!--
                             <template v-slot:selection="" slot-scope="">
@@ -281,7 +283,7 @@
                             v-model="selectedEntity[index]"
                             placeholder="Select..."
                             :options="referenceList(templateInfo[index].referenceTo)"
-                            :searchable="false"
+                            :searchable="true"
                             :multiple="true"
                             :allow-empty="false">
                             <template v-slot:option="{option}">
@@ -542,6 +544,8 @@ export default {
       if(!this.thisGroup[reference]) return [];
       else if(this.thisGroup[reference].list) return Object.keys(this.thisGroup[reference].list);
       else return [];
+    },
+    referenceSelect(){
     },
     removeObjectByIndex(list, indexToRemove, name) {
       if(!name) name = '---';

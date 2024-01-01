@@ -351,9 +351,11 @@ export default {
       this.buildEntity();
     },
     cleanReferencesAndRebuildEntity(){
+      if(!confirm("This will Reset the values for this property in the entity list"));
       let attributeList = this.$root.world.group[this.entityName].templateInfo;
       let entityList    = this.$root.world.group[this.entityName].list;
 
+      if(attributeList)
       Object.keys(entityList).forEach(row => {
         console.log("ROW NUMBER", row);
         console.log("ROW", entityList[row]);
@@ -411,11 +413,14 @@ export default {
             newEntityList[row][attribute] = {};
 
             Object.keys(referenceEntityList).forEach(subAttribute => {
-              //console.log("SUB ATTRIBUTE", subAttribute);
-              //console.log("ROW 1", entityList[row]);
-              //console.log("ROW 2", entityList[row][attribute]);
-              //console.log("ROW 3", entityList[row][attribute][subAttribute]);
-              if(this.checkExist(entityList[row][attribute][subAttribute])){
+              console.log("SUB ATTRIBUTE", subAttribute);
+              console.log("ROW 1", entityList[row]);
+              console.log("ROW 2", entityList[row][attribute]);
+              if(
+                   this.checkExist(entityList[row])
+                   && this.checkExist(entityList[row][attribute])
+                   && this.checkExist(entityList[row][attribute][subAttribute])
+              ){
                 console.log("EXIST!");
                 //TODO: IF Type Change Adapt the changes
                 console.log('Format this value', this.reformatValue(entityList[row][attribute][subAttribute],
@@ -426,7 +431,7 @@ export default {
               }
               else{
                 console.log("CREATE NEW");
-                newEntityList[row][attribute][subAttribute] = 2;
+                newEntityList[row][attribute][subAttribute] = 0;
               }
             });
           }
