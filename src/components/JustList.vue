@@ -228,7 +228,8 @@ export default {
         }
         else if( this.templateInfo[key].type == 'number') newEntity[key] = 0;
         else if( this.templateInfo[key].type == 'condition_list') newEntity[key] = [];
-        else if( this.templateInfo[key].type == 'script_list') newEntity[key] = [];
+				else if( this.templateInfo[key].type == 'script_list') newEntity[key] = [];
+        else if( this.templateInfo[key].type == 'table_list') newEntity[key] = [];
         else newEntity[key] = {};
       });
       console.log("DUPLICATE FROM INFO", newEntity);

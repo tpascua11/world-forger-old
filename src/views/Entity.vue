@@ -275,6 +275,7 @@
                         </div>
                       </div>
                       <div v-else-if="(templateInfo[index].type == 'table_list')">
+                        {{selectedEntity[index]}}
                         <div v-if="(templateInfo[index].type == 'table_list')">
                           <VueMultiselect
                             v-model="selectedEntity[index]"
@@ -288,8 +289,10 @@
                               {{thisGroup[templateInfo[index].referenceTo].list[option]['name']}}
                             </template>
                             <template v-slot:tag="{option}" slot-scope="">
-                              {{thisGroup[templateInfo[index].referenceTo].list[option].name}}
-                              <br><br>
+                              <div v-if="thisGroup[templateInfo[index].referenceTo].list[option]">
+                                       {{thisGroup[templateInfo[index].referenceTo].list[option].name}}
+                                      <br><br>
+                              </div>
                             </template>
                           </VueMultiselect>
                         </div>
@@ -536,7 +539,9 @@ export default {
       }));
       return newList;
        */
-      return Object.keys(this.thisGroup[reference].list);
+      if(!this.thisGroup[reference]) return [];
+      else if(this.thisGroup[reference].list) return Object.keys(this.thisGroup[reference].list);
+      else return [];
     },
     removeObjectByIndex(list, indexToRemove, name) {
       if(!name) name = '---';

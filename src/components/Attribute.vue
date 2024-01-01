@@ -75,7 +75,7 @@
           <VueMultiselect
             v-model="attributes[key].referenceTo"
             :options="referenceGroup"
-            @select="forceRebuildEntity()"
+            @select="cleanReferencesAndRebuildEntity()"
             :show-labels="false"
             :multiple="false"
             placeholder="..."
@@ -276,6 +276,7 @@ export default {
         nonDeletableList: false,
         orderList: [],
       },
+      oldTemplateInfo: {},
     }
   },
   methods: {
@@ -303,6 +304,10 @@ export default {
       return this.objectListToList(this.$root.world.group[name].list);
     },
     buildEntity(){
+      this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
+      //console.log(this.oldAttributes == this.attributes);
+
+
       let newTemplateInfo = {};
       //TODO: Merge BuildInfo into Template Info
       //------------------------------------------------
@@ -338,9 +343,31 @@ export default {
 
       console.log("TEMPLATE ", JSON.stringify(newTemplateInfo));
       console.log("BUILD INFO ", JSON.stringify(this.attributes));
+      //this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
+      //this.oldTemplateInfo = this.attributes;
 
     },
     forceRebuildEntity(){
+      this.buildEntity();
+    },
+    cleanReferencesAndRebuildEntity(){
+      let attributeList = this.$root.world.group[this.entityName].templateInfo;
+      let entityList    = this.$root.world.group[this.entityName].list;
+
+      Object.keys(entityList).forEach(row => {
+        console.log("ROW NUMBER", row);
+        console.log("ROW", entityList[row]);
+
+        Object.keys(attributeList).forEach(attribute => {
+          console.log("Attribute", attribute);
+          console.log("Attribute Property", attributeList[attribute]);
+          let attributeInfo = attributeList[attribute];
+          if(attributeInfo.type == 'table_list'){
+            entityList[row][attribute] = [];
+          }
+        });
+      });
+
       this.buildEntity();
     },
     rebuildEntityList(){
@@ -358,23 +385,23 @@ export default {
 
 
         Object.keys(attributeList).forEach(attribute => {
-          //console.log("Attribute", attribute);
-          //console.log("Attribute Property", attributeList[attribute]);
+          console.log("Attribute", attribute);
+          console.log("Attribute Property", attributeList[attribute]);
           let attributeInfo = attributeList[attribute];
 
 
           //Normal
           if(!attributeInfo.isList){
             if(entityList[row][attribute]){
-              newEntityList[row][attribute] = entityList[row][attribute];
+              //newEntityList[row][attribute] = entityList[row][attribute];
               //TODO: IF Type Change Adapt the changes
-              if(attributeInfo.type == 'table_list'){
-                if(!Array.isArray(newEntityList[row][attribute]))
-                  newEntityList[row][attribute] = [];
-              }
+              console.log("WHAT IS ENTITY LIST", entityList[row][attribute]);
+              newEntityList[row][attribute] =
+              this.reformatValue(entityList[row][attribute], attributeInfo.type);
             }
             else{
-              newEntityList[row][attribute] = 0;
+              this.reformatValue(entityList[row][attribute], attributeInfo.type);
+              //newEntityList[row][attribute] = 0;
             }
           }
           //All Sub Attributes
@@ -544,8 +571,13 @@ export default {
       else if(fixProp == 'number' && varType != 'number'){
         newValue = 0;
       }
-      else if(fixProp == 'script_list' && !Array.isArray(entity)){
+      else if(fixProp == 'script_list' && !Array.isArray(value)){
         newValue = [];
+      }
+      else if(fixProp == 'table_list'){
+        if(!Array.isArray(value)) newValue = [];
+        else if (value == 0) return [];
+        else newValue = value;
       }
       else if(fixProp == 'current_and_max' && varType != 'object'){
         newValue = {current: 0, max: 0};
@@ -656,8 +688,8 @@ export default {
         this.newStructureInfo = tmp.structureInfo;
       }
 
-      this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
-      console.log(this.oldAttributes == this.attributes);
+      //this.oldAttributes = JSON.parse(JSON.stringify(this.attributes));
+      //console.log(this.oldAttributes == this.attributes);
     },
     resetInfo2(){
       let tmp = this.$root.world.group[this.entityName];
