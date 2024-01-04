@@ -106,6 +106,8 @@ export default {
 				this.filterList = {};
 				Object.entries(this.templateInfo).forEach(([key, value]) => {
 					if(value.type == 'string') this.filterList[key] = '';
+					if(value.type == 'table') this.filterList[key] = '';
+					if(value.type == 'table_list') this.filterList[key] = '';
 				});
 			console.log(this.filterList);
 			}
@@ -248,12 +250,31 @@ export default {
 			console.log("THIS MAP", this.map);
 			Object.entries(this.map).forEach(([key, value]) => {
 				let good = Object.entries(value).every(([key2, value2]) => {
+					//console.log("VAL 2", value2);
+					//console.log("Key 2", key2);
+
+					//console.log("TEMPLATE INFO TEST", this.templateInfo[key2]);
+					let ref = this.templateInfo[key2].referenceTo;
+					let type = this.templateInfo[key2].type;
+					let refGroup = this.$root.world.group[ref];
+					console.log("REF GROUP", refGroup);
+					if(refGroup && refGroup.list){
+						console.log("LIST", refGroup.list);
+					}
+
 					if(Array.isArray(value2)){
-						return true
-						//TODO: Here check value contains any filterList[key2]
-						value2.some(function(val){
-							if(val.includes(this.filterList[key])) return true;
-						});
+						console.log("ARRAY FOUND!", value);
+						if(this.filterList[key2]){
+							return value2.some(function(val){
+								console.log("VAL", refGroup.list[val].name);
+								let fname = refGroup.list[val].name;
+								if(fname.includes(this.filterList[key2])){
+									return true;
+								}
+								else return false;
+							}, this);
+						}
+						else return true;
 					}
 					else{
 						if(this.filterList[key2]){

@@ -75,7 +75,7 @@
           <VueMultiselect
             v-model="attributes[key].referenceTo"
             :options="referenceGroup"
-            @select="cleanReferencesAndRebuildEntity()"
+            @select="cleanReferencesAndRebuildEntity(key)"
             :show-labels="false"
             :multiple="false"
             placeholder="..."
@@ -350,8 +350,9 @@ export default {
     forceRebuildEntity(){
       this.buildEntity();
     },
-    cleanReferencesAndRebuildEntity(){
-      if(!confirm("This will Reset the values for this property in the entity list"));
+    cleanReferencesAndRebuildEntity(key){
+      console.log("THE KEY", key);
+      if(!confirm("This will Reset the values for this property in the entitylist"));
       let attributeList = this.$root.world.group[this.entityName].templateInfo;
       let entityList    = this.$root.world.group[this.entityName].list;
 
@@ -364,9 +365,13 @@ export default {
           console.log("Attribute", attribute);
           console.log("Attribute Property", attributeList[attribute]);
           let attributeInfo = attributeList[attribute];
-          if(attributeInfo.type == 'table_list'){
+          if((attributeInfo.type == 'table_list') && (attribute == key)){
             entityList[row][attribute] = [];
           }
+          else if((attributeInfo.type == 'table') && (attribute == key)){
+            entityList[row][attribute] = 0;
+          }
+
         });
       });
 
