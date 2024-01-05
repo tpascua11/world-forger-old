@@ -108,6 +108,7 @@ export default {
 					if(value.type == 'string') this.filterList[key] = '';
 					if(value.type == 'table') this.filterList[key] = '';
 					if(value.type == 'table_list') this.filterList[key] = '';
+					if(value.isList) this.filterList[key] = '';
 				});
 			console.log(this.filterList);
 			}
@@ -250,29 +251,50 @@ export default {
 			console.log("THIS MAP", this.map);
 			Object.entries(this.map).forEach(([key, value]) => {
 				let good = Object.entries(value).every(([key2, value2]) => {
-					//console.log("VAL 2", value2);
-					//console.log("Key 2", key2);
+					console.log("------------------------------------------------------------------------------");
+					console.log("------------------------------------------------------------------------------");
+					console.log("------------------------------------------------------------------------------");
+					console.log("VAL 2", value2);
+					console.log("Key 2", key2);
 
 					//console.log("TEMPLATE INFO TEST", this.templateInfo[key2]);
-					let ref = this.templateInfo[key2].referenceTo;
-					let type = this.templateInfo[key2].type;
-					let refGroup = this.$root.world.group[ref];
-					console.log("REF GROUP", refGroup);
-					if(refGroup && refGroup.list){
-						console.log("LIST", refGroup.list);
-					}
 
 					if(Array.isArray(value2)){
+						let ref = this.templateInfo[key2].referenceTo;
+						let type = this.templateInfo[key2].type;
+						let refGroup = this.$root.world.group[ref];
+						//console.log("REF GROUP", refGroup);
+						if(refGroup && refGroup.list){
+							//console.log("LIST", refGroup.list);
+						}
+
 						console.log("ARRAY FOUND!", value);
+						//console.log("FILTER LIST", this.filterList);
+						//console.log("FILTER LIST", key2);
 						if(this.filterList[key2]){
-							return value2.some(function(val){
-								console.log("VAL", refGroup.list[val].name);
-								let fname = refGroup.list[val].name;
-								if(fname.includes(this.filterList[key2])){
-									return true;
-								}
-								else return false;
-							}, this);
+							if(type == 'table_list'){
+								return value2.some(function(val){
+									//console.log("VAL", refGroup.list[val].name);
+									let fname = refGroup.list[val].name;
+									if(fname.includes(this.filterList[key2])){
+										return true;
+									}
+									else return false;
+								}, this);
+							} else {
+								console.log("SEE THROUGH 1", JSON.stringify(value2));
+
+								let go = value2.some(function(value){
+									//console.log("Value", value.referenceID);
+									//console.log("Value", value);
+									let fname = refGroup.list[value.referenceID].name;
+									if(fname.includes(this.filterList[key2])){
+										return true;
+									}
+									else return false;
+								}, this);
+								return go;
+							}
 						}
 						else return true;
 					}
