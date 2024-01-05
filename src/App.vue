@@ -27,7 +27,7 @@ export default {
 	name: "top",
 	data: function() {
 		return {
-			world: new World(),
+      world: {group: {}},
 			entityGroup: [],
 			test2: [1,2,3],
 		};

@@ -48,6 +48,7 @@ export default {
 		},
     superReset() {
       if(confirm("RESET WORLD!")){
+        this.$root.world = {};
         this.$root.world.group = {};
         //this.$forceUpdate();
       }
