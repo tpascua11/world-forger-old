@@ -250,9 +250,15 @@ export default {
       entityListExample: ['hp', 'mp', 'tp', 'str'],
       listOfEntity: ['stat', 'item', 'character'],
       dataTypeOption: [
-        'number', 'string','current_and_max',
-        'boolean', 'script_list', 'resource',
-        'table', 'table_list'
+        'number',
+        'string',
+        'current_and_max',
+        'boolean',
+        'script_list',
+        'resource',
+        'table',
+        'table_list',
+        'image_url'
         ],
       listOption: ['all', 'multiselectable'],
       dataFormatOption: ['default', 'current_and_max'],
@@ -576,6 +582,9 @@ export default {
       let newValue;
 
       if(fixProp == 'string' && varType != 'string'){
+        newValue = '';
+      }
+      else if(fixProp == 'image_url' && varType != 'string'){
         newValue = '';
       }
       else if(fixProp == 'number' && varType != 'number'){

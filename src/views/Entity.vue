@@ -256,6 +256,19 @@
                             height: 25px; width: 30%;" />
                         </label>
                       </div>
+                      <div v-else-if="(templateInfo[index].type == 'image_url')">
+                        <div>
+                          Image URL:
+                          <input class="borderless-gray" placeholder="name..."
+                            v-model="selectedEntity[index]" type="text" style="
+                            height: 25px; width: 100%;" />
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                          <img :src="selectedEntity[index]" alt="Image 1">
+                        </div>
+                      </div>
                       <div v-else-if="(templateInfo[index].type == 'table') && (index != 'name')">
                         <div v-if="(templateInfo[index].type == 'table')">
                           <VueMultiselect

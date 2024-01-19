@@ -228,6 +228,9 @@ export default {
         }
         else if(this.templateInfo[key].type == 'string'){
           newEntity[key] = '';
+				}
+        else if(this.templateInfo[key].type == 'image_url'){
+          newEntity[key] = '';
         }
         else if( this.templateInfo[key].type == 'number') newEntity[key] = 0;
         else if( this.templateInfo[key].type == 'condition_list') newEntity[key] = [];
