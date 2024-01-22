@@ -18,4 +18,6 @@ Group {
   },
   ...
 }
+```
 
+This strcuture can also be rearange to fit the game better like turn the list back to arrays and such.
