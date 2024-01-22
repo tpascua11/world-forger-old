@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-The focus was on designing a editiable data structure for creating straightforward games.
+The focus was on designing a editable data structure for creating straightforward games.
 
 ### Design Concept
 
