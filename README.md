@@ -4,19 +4,18 @@
 
 ## Project Overview
 
-The focus was on designing a database-like data structure for creating straightforward games.
+The focus was on designing a editiable data structure for creating straightforward games.
 
 ### Design Concept
 
-The design involves a database-like structure with the ability to create various game elements dynamically. For instance:
+The project is built on a robust database-like structure that enables users to define and organize data groups. This is couple of example of what it could be:
 
 ```javascript
 Group {
   Items: {
     templateInfo{name: 'string', cost: 'number', limit: 'number'},
-    list: {item1, item2, item3}
+    list: {{name: 'Gold', cost: 1, limit: 9999}, {name: 'Potion', cost: 100, limit: 99} }
   },
-  Characters: {...},
-  Items: {...},
-  Entity3: {...},
+  ...
 }
+
