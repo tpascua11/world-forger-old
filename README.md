@@ -1,6 +1,6 @@
 # World Forger
 
-**Note:** This project has been rebranded and revamped. The new project is now called [Entity Master](https://github.com/tpascua11/Entity-Master).
+**Note:** This project has been rebranded and revamped. The new project is being remade in with Vue 3 ([https://github.com/tpascua11/world-forger)).
 
 ## Project Overview
 
